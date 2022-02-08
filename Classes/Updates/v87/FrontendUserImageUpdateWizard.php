@@ -153,8 +153,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                 $this->recordOffset[$this->table] = 0;
             }
             do {
-                $limit = $this->recordOffset[$this->table] . ',' . self::RECORDS_PER_QUERY;
-                $records = $this->getRecordsFromTable($limit);
+                $records = $this->getRecordsFromTable((int)$this->recordOffset[$this->table], self::RECORDS_PER_QUERY);
                 foreach ($records as $record) {
                     $this->migrateField($record);
                 }
@@ -183,11 +182,12 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
      * Get records from table where the field to migrate is not empty (NOT NULL and != '')
      * and also not numeric (which means that it is migrated)
      *
+     * @param int $offset Maximum number records to select
      * @param int $limit Maximum number records to select
      * @return array
      * @throws \RuntimeException
      */
-    protected function getRecordsFromTable($limit)
+    protected function getRecordsFromTable(int $offset, int $limit)
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $queryBuilder = $connectionPool->getQueryBuilderForTable($this->table);
@@ -211,7 +211,8 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                     )
                 )
                 ->orderBy('uid')
-                ->setFirstResult($limit)
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
                 ->execute()
                 ->fetchAll();
         } catch (DBALException $e) {
