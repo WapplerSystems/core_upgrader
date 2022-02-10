@@ -104,7 +104,7 @@ class FileReferenceUpdate implements UpgradeWizardInterface
                 $fileReference = $record['ref_string'];
             } else {
                 try {
-                    $fileObject = ResourceFactory::getInstance()->retrieveFileOrFolderObject($record['ref_string']);
+                    $fileObject = $this->getResourceFactory()->retrieveFileOrFolderObject($record['ref_string']);
                     if ($fileObject instanceof File) {
                         $fileReference = $fileObject->getUid();
                     }
@@ -134,5 +134,13 @@ class FileReferenceUpdate implements UpgradeWizardInterface
         }
 
         return true;
+    }
+
+    /**
+     * @return ResourceFactory
+     */
+    protected function getResourceFactory(): ResourceFactory
+    {
+        return GeneralUtility::makeInstance(ResourceFactory::class);
     }
 }
