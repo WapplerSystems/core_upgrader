@@ -3,6 +3,57 @@
 declare(strict_types=1);
 
 $upgrades = [
+    'v7.6' => [
+        'accessRightParameters' => [
+            'accessRightParameters' => \TYPO3\CMS\v76\Install\Updates\AccessRightParametersUpdate::class,
+        ],
+        'backendUserStartModule' => [
+            'backendUserStartModule' => \TYPO3\CMS\v76\Install\Updates\BackendUserStartModuleUpdate::class,
+        ],
+        'languageIsoCode' => [
+            'languageIsoCode' => \TYPO3\CMS\v76\Install\Updates\LanguageIsoCodeUpdate::class,
+        ],
+        'PageShortcutParent' => [
+            'PageShortcutParent' => \TYPO3\CMS\v76\Install\Updates\PageShortcutParentUpdate::class,
+        ],
+        'migrateShortcutUrlsAgain' => [
+            'migrateShortcutUrlsAgain' => \TYPO3\CMS\v76\Install\Updates\MigrateShortcutUrlsAgainUpdate::class,
+        ],
+        /*
+        'processedFilesChecksum' => [
+            'processedFilesChecksum' => \TYPO3\CMS\v76\Install\Updates\ProcessedFileChecksumUpdate::class,
+        ],*/
+        'filesReplacePermission' => [
+            'filesReplacePermission' => \TYPO3\CMS\v76\Install\Updates\FilesReplacePermissionUpdate::class,
+        ],
+        'tableFlexFormToTtContentFields' => [
+            'tableFlexFormToTtContentFields' => \TYPO3\CMS\v76\Install\Updates\TableFlexFormToTtContentFieldsUpdate::class,
+        ],
+        'fileListInAccessModuleList' => [
+            'fileListInAccessModuleList' => \TYPO3\CMS\v76\Install\Updates\FileListInAccessModuleListUpdate::class,
+        ],
+        'fileListIsStartModule' => [
+            'fileListIsStartModule' => \TYPO3\CMS\v76\Install\Updates\FileListIsStartModuleUpdate::class,
+        ],
+        /*
+        'textmediaCType' => [
+            'textmediaCType' => \TYPO3\CMS\v76\Install\Updates\ContentTypesToTextMediaUpdate::class,
+        ],
+        'workspacesNotificationSettingsUpdate' => [
+            'workspacesNotificationSettingsUpdate' => \TYPO3\CMS\v76\Install\Updates\WorkspacesNotificationSettingsUpdate::class,
+        ],*/
+        'textmediaAssets' => [
+            'textmediaAssets' => \TYPO3\CMS\v76\Install\Updates\MigrateMediaToAssetsForTextMediaCe::class,
+        ],
+        'compatibility6Extension' => [
+            'compatibility6Extension' => \TYPO3\CMS\v76\Install\Updates\Compatibility6ExtractionUpdate::class,
+        ],
+        /*
+        'openidExtension' => [
+            'openidExtension' => \TYPO3\CMS\v76\Install\Updates\OpenidExtractionUpdate::class,
+        ],*/
+
+    ],
     'v8.7' => [
         'wizardDoneToRegistry' => [
             'wizardDoneToRegistry' => \TYPO3\CMS\v87\Install\Updates\WizardDoneToRegistry::class,
