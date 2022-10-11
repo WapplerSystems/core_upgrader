@@ -105,7 +105,7 @@ class RteLinkSyntaxUpdater implements RowUpdaterInterface
                 && in_array($fieldConfiguration['config']['type'], ['input', 'text', 'flex'], true)
             ) {
                 $result = true;
-                if (!is_array($this->tableFieldListToConsider[$tableName])) {
+                if (!is_array($this->tableFieldListToConsider[$tableName] ?? null)) {
                     $this->tableFieldListToConsider[$tableName] = [];
                 }
                 $this->tableFieldListToConsider[$tableName][] = $fieldName;
