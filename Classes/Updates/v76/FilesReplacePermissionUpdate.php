@@ -63,7 +63,7 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
         $notMigratedRowsCount = (bool)$queryBuilder->count('uid')
             ->from('be_users')
             ->where(
-                $queryBuilder->expr()->andX(
+                $queryBuilder->expr()->and(
                     $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%', \PDO::PARAM_STR)),
                     $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
                 )
@@ -81,7 +81,7 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
             $notMigratedRowsCount = (bool)$queryBuilder->count('uid')
                 ->from('be_groups')
                 ->where(
-                    $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->and(
                         $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%', \PDO::PARAM_STR)),
                         $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
                     )
@@ -123,7 +123,7 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
             $statement = $queryBuilder->select('uid','file_permissions')
                 ->from($table)
                 ->where(
-                    $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->and(
                         $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%', \PDO::PARAM_STR)),
                         $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
                     )

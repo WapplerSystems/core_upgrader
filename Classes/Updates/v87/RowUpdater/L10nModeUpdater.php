@@ -244,7 +244,7 @@ class L10nModeUpdater implements RowUpdaterInterface
                 $selectFieldNames,
                 ['t3ver_wsid', 't3ver_oid', 't3ver_state']
             );
-            $predicates[] = $queryBuilder->expr()->orX(
+            $predicates[] = $queryBuilder->expr()->or(
                 $queryBuilder->expr()->eq(
                     't3ver_state',
                     $queryBuilder->createNamedParameter(

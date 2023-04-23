@@ -61,7 +61,7 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
         $elementCount = $queryBuilder->count('uid')
             ->from('sys_template')
             ->where(
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->like(
                         'constants',
                         $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
@@ -103,7 +103,7 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
         $statement = $queryBuilder->select('uid', 'include_static_file', 'constants', 'config')
             ->from('sys_template')
             ->where(
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->like(
                         'constants',
                         $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)

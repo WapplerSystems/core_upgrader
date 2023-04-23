@@ -201,6 +201,6 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
             $constraints[] = $queryBuilder->expr()->like('pi_flexform', $queryBuilder->createNamedParameter($value));
         }
 
-        return $queryBuilder->expr()->orX(...$constraints);
+        return $queryBuilder->expr()->or(...$constraints);
     }
 }

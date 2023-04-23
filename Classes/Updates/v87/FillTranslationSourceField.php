@@ -62,7 +62,7 @@ class FillTranslationSourceField implements UpgradeWizardInterface
         $queryBuilder->getRestrictions()->removeAll();
         $query = $queryBuilder->count('uid')
             ->from('tt_content')
-            ->where($queryBuilder->expr()->andX(
+            ->where($queryBuilder->expr()->and(
                 $queryBuilder->expr()->gt('l18n_parent', $queryBuilder->createNamedParameter(0)),
                 $queryBuilder->expr()->eq('l10n_source', $queryBuilder->createNamedParameter(0))
             ));
@@ -92,7 +92,7 @@ class FillTranslationSourceField implements UpgradeWizardInterface
         $queryBuilder->getRestrictions()->removeAll();
         $queryBuilder->update('tt_content', 't')
             ->set('t.l10n_source', 't.l18n_parent', false)
-            ->where($queryBuilder->expr()->andX(
+            ->where($queryBuilder->expr()->and(
                 $queryBuilder->expr()->gt('t.l18n_parent', $queryBuilder->createNamedParameter(0)),
                 $queryBuilder->expr()->eq('t.l10n_source', $queryBuilder->createNamedParameter(0))
             ))

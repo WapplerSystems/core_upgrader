@@ -123,7 +123,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
             ->select('*')
             ->from($this->table)
             ->where(
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->eq($this->fieldName, $queryBuilder->createNamedParameter('')),
                     $queryBuilder->expr()->isNull($this->fieldName)
                 )
@@ -210,7 +210,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
             ->count('uid')
             ->from($this->table)
             ->where(
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->eq($this->fieldName, $queryBuilder->createNamedParameter('')),
                     $queryBuilder->expr()->isNull($this->fieldName)
                 )
@@ -238,7 +238,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
             ->from($tableName)
             ->where(
                 $queryBuilder->expr()->eq('mpvar', $queryBuilder->createNamedParameter('')),
-                $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->or(
                     $queryBuilder->expr()->eq('expire', $queryBuilder->createNamedParameter(0)),
                     $queryBuilder->expr()->gt('expire', $queryBuilder->createNamedParameter($currentTimestamp))
                 )

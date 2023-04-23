@@ -300,7 +300,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
                 ->from('sys_log')
                 ->where(
                     $logQueryBuilder->expr()->eq('type', $logQueryBuilder->createNamedParameter(1, \PDO::PARAM_INT)),
-                    $logQueryBuilder->expr()->orX(
+                    $logQueryBuilder->expr()->or(
                         $logQueryBuilder->expr()->eq('action', $logQueryBuilder->createNamedParameter(1, \PDO::PARAM_INT)),
                         $logQueryBuilder->expr()->eq('action', $logQueryBuilder->createNamedParameter(3, \PDO::PARAM_INT))
                     )

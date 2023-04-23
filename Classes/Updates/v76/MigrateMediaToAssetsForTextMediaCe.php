@@ -62,7 +62,7 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
         return (bool)$queryBuilder->count('uid')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->andX(
+                $queryBuilder->expr()->and(
                     $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('textmedia', \PDO::PARAM_STR)),
                     $queryBuilder->expr()->gt('media', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
                 )
@@ -94,7 +94,7 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
         $updateQueryBuilder->update('sys_file_reference')
             ->leftJoin('sys_file_reference','tt_content','tt_content')
             ->where(
-                $updateQueryBuilder->expr()->andX(
+                $updateQueryBuilder->expr()->and(
                     $updateQueryBuilder->expr()->eq(
                         'tt_content.CType', $updateQueryBuilder->createNamedParameter('textmedia', \PDO::PARAM_STR)
                     ),

@@ -67,8 +67,8 @@ This can either happen on demand, when the processed file is first needed, or by
             ->from('sys_file_processedfile')
             ->leftJoin('sys_file_processedfile','sys_registry','sys_registry', 'CAST(entry_key AS CHAR) = CAST(sys_file_processedfile.uid AS CHAR) AND entry_namespace = \'ProcessedFileChecksumUpdate\'')
             ->where(
-                $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->andX(
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->and(
                         $queryBuilder->expr()->isNull('entry_key', $queryBuilder->createNamedParameter('_FILE', \PDO::PARAM_STR)),
                         $queryBuilder->expr()->neq('sys_file_processedfile.identifier', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
                     ),
