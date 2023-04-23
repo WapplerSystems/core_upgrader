@@ -20,9 +20,9 @@
     ],
     "require": {
         "php": ">=7.2 || ^8.0",
-        "typo3/cms-core": "^11.5.0",
-        "typo3/cms-frontend": "^11.5.0",
-        "typo3/cms-install": "^11.5.0",
+        "typo3/cms-core": "^12.3.0",
+        "typo3/cms-frontend": "^12.3.0",
+        "typo3/cms-install": "^12.3.0",
         "helhum/typo3-console": "^7.0.0"
     },
     "autoload": {
