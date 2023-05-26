@@ -14,9 +14,9 @@ $EM_CONF[$_EXTKEY] = [
   'title' => 'Core upgrader',
   'description' => 'Run upgrade wizards for multiple TYPO3 versions at once',
   'category' => 'cli',
-  'author' => 'Nicole Cordes',
-  'author_email' => 'typo3@cordes.co',
-  'author_company' => 'biz-design',
+  'author' => 'Sven Wappler',
+  'author_email' => 'typo3@wappler.systems',
+  'author_company' => 'WapplerSystems',
   'state' => 'stable',
   'uploadfolder' => 0,
   'createDirs' => '',
@@ -26,7 +26,7 @@ $EM_CONF[$_EXTKEY] = [
   [
     'depends' => 
     [
-      'typo3' => '10.4.0-10.4.99',
+      'typo3' => '12.4.0-12.4.99',
     ],
     'conflicts' => 
     [
