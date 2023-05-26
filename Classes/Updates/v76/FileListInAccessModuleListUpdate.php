@@ -17,12 +17,14 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Update module access to the file list module
  */
+#[Operation('fileListInAccessModuleList')]
 class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
 {
 
@@ -71,8 +73,8 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
                 ->where(
                     $queryBuilder->expr()->inSet($field, $queryBuilder->createNamedParameter('file_list', \PDO::PARAM_STR))
                 )
-                ->execute()
-                ->fetchColumn(0);
+                ->executeQuery()
+                ->fetchOne();
 
             if ($count > 0) {
                 return true;
@@ -110,8 +112,8 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
                 ->where(
                     $queryBuilder->expr()->inSet($field, $queryBuilder->createNamedParameter('file_list', \PDO::PARAM_STR))
                 )
-                ->execute();
-            while ($row = $statement->fetch()) {
+                ->executeQuery();
+            while ($row = $statement->fetchAssociative()) {
                 $moduleList = explode(',', $row[$field]);
                 $moduleList = array_combine($moduleList, $moduleList);
                 $moduleList['file_list'] = 'file_FilelistList';
@@ -125,7 +127,7 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
                             $updateQueryBuilder->createNamedParameter((int)$row['uid'], \PDO::PARAM_INT)
                         )
                     )
-                    ->set($field, implode(',', $moduleList))->execute();
+                    ->set($field, implode(',', $moduleList))->executeQuery();
 
             }
         }

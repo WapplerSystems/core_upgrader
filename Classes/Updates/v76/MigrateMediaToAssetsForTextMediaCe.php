@@ -16,12 +16,14 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate CTypes 'textmedia' to use 'assets' field instead of 'media'
  */
+#[Operation('migrateMediaToAssetsForTextMediaCe')]
 class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
 {
     /**
@@ -67,8 +69,8 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
                     $queryBuilder->expr()->gt('media', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
                 )
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -103,7 +105,7 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
             )->set('tt_content.assets', 'tt_content.media', false)
             ->set('sys_file_reference.fieldname', 'assets')
             ->set('tt_content.media', 0)
-        ->execute();
+        ->executeQuery();
 
         return true;
     }

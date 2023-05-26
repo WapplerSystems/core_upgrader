@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -13,45 +15,47 @@
  * The TYPO3 project - inspiring people to share!
  */
 
-namespace TYPO3\CMS\v95\Install\Updates;
+namespace TYPO3\CMS\v115\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\AbstractDownloadExtensionUpdate;
 use TYPO3\CMS\Install\Updates\Confirmation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\ExtensionModel;
 
 /**
- * Installs and downloads EXT:rdct if cache_md5params is filled
+ * Installs and downloads EXT:legacy_collections if requested
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
+#[Operation('legacyCollectionsExtension')]
+class CollectionsExtractionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
-     * @var \TYPO3\CMS\Install\Updates\ExtensionModel
+     * @var ExtensionModel
      */
     protected $extension;
 
     /**
-     * @var \TYPO3\CMS\Install\Updates\Confirmation
+     * @var Confirmation
      */
     protected $confirmation;
 
     public function __construct()
     {
         $this->extension = new ExtensionModel(
-            'rdct',
-            'Redirects based on &RDCT parameter',
+            'legacy_collections',
+            'sys_collection Database APIs',
             '1.0.0',
-            'friendsoftypo3/rdct',
-            'The extension provides redirects based on "cache_md5params" and the GET parameter &RDCT for extensions that still rely on it.'
+            'friendsoftypo3/legacy-collections',
+            'Re-Adds previously available sys_collection database tables'
         );
 
         $this->confirmation = new Confirmation(
             'Are you sure?',
-            'You should install the Redirects extension only if needed. ' . $this->extension->getDescription(),
+            'This API has not been used very often, only install it if you have entries in your sys_collection database table. ' . $this->extension->getDescription(),
             false
         );
     }
@@ -59,7 +63,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
     /**
      * Return a confirmation message instance
      *
-     * @return \TYPO3\CMS\Install\Updates\Confirmation
+     * @return Confirmation
      */
     public function getConfirmation(): Confirmation
     {
@@ -74,7 +78,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
      */
     public function getIdentifier(): string
     {
-        return 'rdctExtension';
+        return 'legacyCollectionsExtension';
     }
 
     /**
@@ -84,7 +88,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
      */
     public function getTitle(): string
     {
-        return 'Install extension "rdct" from TER if DB table cache_md5params is filled';
+        return 'Install extension "legacy_collections" from TER for sys_collection database records';
     }
 
     /**
@@ -94,9 +98,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
      */
     public function getDescription(): string
     {
-        return 'The extension "rdct" includes redirects based on the GET parameter &RDCT. The functionality has been extracted to'
-               . ' the TYPO3 Extension Repository. This update downloads the TYPO3 extension from the TER.'
-               . ' Use this if you are dealing with extensions in the instance that rely on this kind of redirects.';
+        return 'The extension "legacy_collections" re-adds the database tables sys_collection_* and its TCA definition, if this was previously in use.';
     }
 
     /**
@@ -107,28 +109,22 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
      */
     public function updateNecessary(): bool
     {
-        return !ExtensionManagementUtility::isLoaded('rdct') && $this->checkIfWizardIsRequired();
-    }
-
-    /**
-     * Check if the database table "cache_md5params" exists and if so, if there are entries in the DB table.
-     *
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    protected function checkIfWizardIsRequired(): bool
-    {
+        // Extension already activated, nothing to do
+        if (ExtensionManagementUtility::isLoaded('legacy_collections')) {
+            return true;
+        }
+        // Check if database table exist
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $connection = $connectionPool->getConnectionByName('Default');
-        $tableNames = $connection->getSchemaManager()->listTableNames();
-        if (in_array('cache_md5params', $tableNames, true)) {
+        $tableNames = $connection->createSchemaManager()->listTableNames();
+        if (in_array('sys_collection', $tableNames, true)) {
             // table is available, now check if there are entries in it
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-                ->getQueryBuilderForTable('cache_md5params');
+                ->getQueryBuilderForTable('sys_collection');
             $numberOfEntries = $queryBuilder->count('*')
-                ->from('cache_md5params')
+                ->from('sys_collection')
                 ->executeQuery()
-                ->fetchColumn();
+                ->fetchOne();
             return (bool)$numberOfEntries;
         }
 
@@ -145,7 +141,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
     public function getPrerequisites(): array
     {
         return [
-            DatabaseUpdatedPrerequisite::class
+            DatabaseUpdatedPrerequisite::class,
         ];
     }
 }

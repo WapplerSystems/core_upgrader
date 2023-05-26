@@ -111,10 +111,10 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('login'))
             )
-            ->execute();
+            ->executeQuery();
 
         // Update the found record sets
-        while ($record = $statement->fetch()) {
+        while ($record = $statement->fetchAssociative()) {
             $queryBuilder = $connection->createQueryBuilder();
             $updateResult = $queryBuilder->update('tt_content')
                 ->where(
@@ -124,7 +124,7 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
                     )
                 )
                 ->set('pi_flexform', $this->migrateFlexformSettings($record['pi_flexform']))
-                ->execute();
+                ->executeQuery();
 
             //exit if at least one update statement is not successful
             if (!((bool)$updateResult)) {
@@ -155,7 +155,7 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
                 $this->getFlexformConstraints($queryBuilder)
             );
 
-        return (bool)$queryBuilder->execute()->fetchColumn();
+        return (bool)$queryBuilder->executeQuery()->fetchColumn();
     }
 
     /**

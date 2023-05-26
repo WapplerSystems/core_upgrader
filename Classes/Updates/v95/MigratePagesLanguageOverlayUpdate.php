@@ -142,14 +142,14 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
         $overlayRecords = $overlayQueryBuilder
             ->select('*')
             ->from('pages_language_overlay')
-            ->execute();
+            ->executeQuery();
         $pagesConnection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('pages');
         $pagesColumns = $pagesConnection->getSchemaManager()->listTableDetails('pages')->getColumns();
         $pagesColumnTypes = [];
         foreach ($pagesColumns as $pageColumn) {
             $pagesColumnTypes[$pageColumn->getName()] = $pageColumn->getType()->getBindingType();
         }
-        while ($overlayRecord = $overlayRecords->fetch()) {
+        while ($overlayRecord = $overlayRecords->fetchAssociative()) {
             // Early continue if record has been migrated before
             if ($this->isOverlayRecordMigratedAlready((int)$overlayRecord['uid'])) {
                 continue;
@@ -211,8 +211,8 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                                 $translatedPagesQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                             )
                         )
-                        ->execute();
-                    while ($translatedPageRow = $translatedPagesRows->fetch()) {
+                        ->executeQuery();
+                    while ($translatedPageRow = $translatedPagesRows->fetchAssociative()) {
                         $foreignTableQueryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($foreignTable);
                         $foreignTableQueryBuilder->getRestrictions()->removeAll();
                         $foreignTableQueryBuilder
@@ -229,7 +229,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                                     $foreignTableQueryBuilder->createNamedParameter('pages_language_overlay', \PDO::PARAM_STR)
                                 )
                             )
-                            ->execute();
+                            ->executeQuery();
                     }
                 }
             }
@@ -253,8 +253,8 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                     $translatedPagesQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
             )
-            ->execute();
-        while ($translatedPageRow = $translatedPagesRows->fetch()) {
+            ->executeQuery();
+        while ($translatedPageRow = $translatedPagesRows->fetchAssociative()) {
             $historyTableQueryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_history');
             $historyTableQueryBuilder->getRestrictions()->removeAll();
             $historyTableQueryBuilder
@@ -271,7 +271,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                         $historyTableQueryBuilder->createNamedParameter('pages_language_overlay', \PDO::PARAM_STR)
                     )
                 )
-                ->execute();
+                ->executeQuery();
         }
     }
 
@@ -294,8 +294,8 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                     $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)
                 )
             )
-            ->execute()
-            ->fetch();
+            ->executeQuery()
+            ->fetchAssociative();
         return $page ?: [];
     }
 
@@ -319,8 +319,8 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                     $queryBuilder->createNamedParameter($overlayUid, \PDO::PARAM_INT)
                 )
             )
-            ->execute()
-            ->fetch();
+            ->executeQuery()
+            ->fetchAssociative();
         return !empty($migratedRecord);
     }
 
@@ -341,7 +341,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                 ->getQueryBuilderForTable('pages_language_overlay');
             $numberOfEntries = $queryBuilder->count('*')
                 ->from('pages_language_overlay')
-                ->execute()
+                ->executeQuery()
                 ->fetchColumn();
             return (bool)$numberOfEntries;
         }

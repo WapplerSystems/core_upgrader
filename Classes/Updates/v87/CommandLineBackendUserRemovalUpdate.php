@@ -129,7 +129,7 @@ class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, Cha
                 // "false" is set as third parameter to have the final
                 // value in $databaseQueries and not a statement placeholder
                 ->set('deleted', 1, false)
-                ->execute();
+                ->executeQuery();
         }
         $this->output->writeln('The following backend users have been deleted:');
         foreach ($usersFound as $user) {
@@ -164,9 +164,9 @@ class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, Cha
                     $queryBuilder->createNamedParameter('_cli_', \PDO::PARAM_STR)
                 )
             )
-            ->execute();
+            ->executeQuery();
 
-        while ($row = $result->fetch()) {
+        while ($row = $result->fetchAssociative()) {
             $commandLineUsers[$row['uid']] = $row['username'];
         }
 

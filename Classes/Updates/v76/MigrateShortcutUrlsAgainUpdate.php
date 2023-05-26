@@ -16,12 +16,14 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate backend shortcut urls
  */
+#[Operation('migrateShortcutUrlsAgain')]
 class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
 {
 
@@ -59,8 +61,8 @@ class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_refindex');
         return (bool)$queryBuilder->count('uid')
             ->from('sys_be_shortcuts')
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -86,9 +88,9 @@ class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
         $queryBuilder = $connection->createQueryBuilder();
         $statement = $queryBuilder->select('uid','url')
             ->from('sys_be_shortcuts')
-            ->execute();
+            ->executeQuery();
 
-        while ($record = $statement->fetch()) {
+        while ($record = $statement->fetchAssociative()) {
             $decodedUrl = urldecode($record['url']);
             $encodedUrl = str_replace(
                 [
@@ -115,7 +117,7 @@ class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
                         'uid',
                         $updateQueryBuilder->createNamedParameter((int)$record['uid'], \PDO::PARAM_INT)
                     )
-                )->set('url', $encodedUrl)->execute();
+                )->set('url', $encodedUrl)->executeQuery();
 
         }
         return true;

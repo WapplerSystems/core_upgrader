@@ -14,15 +14,17 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate the Flexform for CType 'table' to regular fields in tt_content
  */
+#[Operation('tableFlexFormToTtContentFields')]
 class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
 {
 
@@ -60,20 +62,15 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
      */
     public function updateNecessary(): bool
     {
-        if (!ExtensionManagementUtility::isLoaded('css_styled_content')) {
-            return false;
-        }
-
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
         return (bool)$queryBuilder->count('uid')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table', \PDO::PARAM_STR)),
-                $queryBuilder->expr()->isNotNull('pi_flexform'),
-                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
+                $queryBuilder->expr()->isNotNull('pi_flexform')
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -90,35 +87,39 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
      * Performs the database update if CType 'table' still has content in pi_flexform
      *
      * @return bool
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {
 
-        $databaseResult = $databaseConnection->exec_SELECTquery(
-            'uid, pi_flexform',
-            'tt_content',
-            'CType=\'table\' AND pi_flexform IS NOT NULL AND deleted = 0'
-        );
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+        $result = $queryBuilder->select('uid, pi_flexform')
+            ->from('tt_content')
+            ->where(
+                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table', \PDO::PARAM_STR)),
+                $queryBuilder->expr()->isNotNull('pi_flexform')
+            )
+            ->executeQuery();
+        while ($row = $result->fetchAssociative()) {
 
-        while ($tableRecord = $databaseConnection->sql_fetch_assoc($databaseResult)) {
-            $flexForm = $this->initializeFlexForm($tableRecord['pi_flexform']);
+            $flexForm = $this->initializeFlexForm($row['pi_flexform']);
 
             if (is_array($flexForm)) {
                 $fields = $this->mapFieldsFromFlexForm($flexForm);
 
-                // Set pi_flexform to NULL
-                $fields['pi_flexform'] = null;
-
-                $databaseConnection->exec_UPDATEquery(
-                    'tt_content',
-                    'uid=' . (int)$tableRecord['uid'],
-                    $fields
-                );
-
-                $databaseQueries[] = $databaseConnection->debug_lastBuiltQuery;
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+                $queryBuilder = $queryBuilder
+                    ->update('tt_content')
+                    ->where(
+                        $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter((int)$row['uid']))
+                    )
+                    ->set('pi_flexform', null);
+                foreach ($fields as $fieldKey => $fieldValue) {
+                    $queryBuilder = $queryBuilder->set($fieldKey, $fieldValue);
+                }
+                $queryBuilder->executeStatement();
             }
         }
-
 
         return true;
     }

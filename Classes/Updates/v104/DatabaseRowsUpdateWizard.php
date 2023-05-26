@@ -199,9 +199,9 @@ class DatabaseRowsUpdateWizard implements UpgradeWizardInterface, RepeatableInte
                     $queryBuilder->expr()->gt('uid', $queryBuilder->createNamedParameter($startPosition['uid']))
                 );
             }
-            $statement = $queryBuilder->execute();
+            $statement = $queryBuilder->executeQuery();
             $rowCountWithoutUpdate = 0;
-            while ($row = $rowBefore = $statement->fetch()) {
+            while ($row = $rowBefore = $statement->fetchAssociative()) {
                 foreach ($updaters as $updater) {
                     $row = $updater->updateTableRow($table, $row);
                 }
@@ -246,7 +246,7 @@ class DatabaseRowsUpdateWizard implements UpgradeWizardInterface, RepeatableInte
                     } else {
                         // Either different connections for table and sys_registry, or mssql.
                         // SqlServer can not run a transaction for a table if the same table is queried
-                        // currently - our above ->fetch() main loop.
+                        // currently - our above ->fetchAssociative() main loop.
                         // So, execute two distinct queries and hope for the best.
                         $this->updateOrDeleteRow(
                             $connectionForTable,

@@ -133,7 +133,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
             // Ensure that all pages are run through "per parent page" field, and in the correct sorting values
             ->addOrderBy('pid', 'asc')
             ->addOrderBy('sorting', 'asc')
-            ->execute();
+            ->executeQuery();
 
         // Check for existing slugs from realurl
         $suggestedSlugs = [];
@@ -148,7 +148,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
         $hasToBeUniqueInSite = in_array('uniqueInSite', $evalInfo, true);
         $hasToBeUniqueInPid = in_array('uniqueInPid', $evalInfo, true);
         $slugHelper = GeneralUtility::makeInstance(SlugHelper::class, $this->table, $this->fieldName, $fieldConfig);
-        while ($record = $statement->fetch()) {
+        while ($record = $statement->fetchAssociative()) {
             $recordId = (int)$record['uid'];
             $pid = (int)$record['pid'];
             $languageId = (int)$record['sys_language_uid'];
@@ -171,7 +171,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
                         ->from('pages')
                         ->where(
                             $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($record['t3ver_oid'], \PDO::PARAM_INT))
-                        )->execute()->fetch();
+                        )->executeQuery()->fetchAssociative();
                     $pid = (int)$liveVersion['pid'];
                 }
                 $slug = $slugHelper->generate($record, $pid);
@@ -215,7 +215,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
                     $queryBuilder->expr()->isNull($this->fieldName)
                 )
             )
-            ->execute()
+            ->executeQuery()
             ->fetchColumn();
         return $numberOfEntries > 0;
     }
@@ -244,9 +244,9 @@ class PopulatePageSlugs implements UpgradeWizardInterface
                 )
             )
             ->orderBy('expire', 'ASC')
-            ->execute();
+            ->executeQuery();
         $suggestedSlugs = [];
-        while ($row = $statement->fetch()) {
+        while ($row = $statement->fetchAssociative()) {
             // rawurldecode ensures that non-ASCII arguments are also migrated
             $pagePath = rawurldecode($row['pagepath']);
             if (!isset($suggestedSlugs[(int)$row['page_id']][(int)$row['language_id']])) { // keep only first result

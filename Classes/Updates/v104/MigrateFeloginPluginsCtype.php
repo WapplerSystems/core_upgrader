@@ -88,7 +88,7 @@ final class MigrateFeloginPluginsCtype implements UpgradeWizardInterface, Repeat
                     $queryBuilder->createNamedParameter($this->getOldCType())
                 )
             )
-            ->execute();
+            ->executeQuery();
 
         return true;
     }
@@ -111,7 +111,7 @@ final class MigrateFeloginPluginsCtype implements UpgradeWizardInterface, Repeat
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter($this->getOldCType()))
             )
-            ->execute()->fetchColumn();
+            ->executeQuery()->fetchColumn();
 
         return (bool)$elementCount;
     }

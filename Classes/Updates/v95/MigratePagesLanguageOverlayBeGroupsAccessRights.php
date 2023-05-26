@@ -51,8 +51,8 @@ class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardIn
         $beGroupsRows = $beGroupsQueryBuilder
             ->select('uid', 'non_exclude_fields', 'tables_modify')
             ->from('be_groups')
-            ->execute();
-        while ($beGroupsRow = $beGroupsRows->fetch()) {
+            ->executeQuery();
+        while ($beGroupsRow = $beGroupsRows->fetchAssociative()) {
             $updateNeeded = false;
             if (!empty($beGroupsRow['tables_modify'])) {
                 // If 'pages_language_overlay' is allowed as table-modify, remove it and add
@@ -100,7 +100,7 @@ class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardIn
                             $updateBeGroupsQueryBuilder->createNamedParameter($beGroupsRow['uid'], \PDO::PARAM_INT)
                         )
                     )
-                    ->execute();
+                    ->executeQuery();
             }
         }
         return true;

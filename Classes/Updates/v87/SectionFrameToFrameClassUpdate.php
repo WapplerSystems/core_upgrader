@@ -71,8 +71,8 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
             ->where(
                 $queryBuilder->expr()->gt('section_frame', 0)
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
         return (bool)$elementCount;
     }
 
@@ -101,8 +101,8 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
             ->where(
                 $queryBuilder->expr()->gt('section_frame', 0)
             )
-            ->execute();
-        while ($record = $statement->fetch()) {
+            ->executeQuery();
+        while ($record = $statement->fetchAssociative()) {
             $queryBuilder = $connection->createQueryBuilder();
             $queryBuilder->update('tt_content')
                 ->where(
@@ -113,7 +113,7 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
                 )
                 ->set('section_frame', 0, false)
                 ->set('frame_class', $this->mapSectionFrame($record['section_frame']));
-            $queryBuilder->execute();
+            $queryBuilder->executeQuery();
         }
         return true;
     }

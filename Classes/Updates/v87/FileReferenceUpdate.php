@@ -67,8 +67,8 @@ class FileReferenceUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('softref_key', $queryBuilder->createNamedParameter('typolink_tag', \PDO::PARAM_STR)),
                 $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -97,8 +97,8 @@ class FileReferenceUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('softref_key', $queryBuilder->createNamedParameter('typolink_tag', \PDO::PARAM_STR)),
                 $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
             )
-            ->execute();
-        while ($record = $statement->fetch()) {
+            ->executeQuery();
+        while ($record = $statement->fetchAssociative()) {
             $fileReference = 0;
             if (MathUtility::canBeInterpretedAsInteger($record['ref_string'])) {
                 $fileReference = $record['ref_string'];
@@ -130,7 +130,7 @@ class FileReferenceUpdate implements UpgradeWizardInterface
                 $updateQueryBuilder->set('deleted', 1);
             }
 
-            $updateQueryBuilder->execute();
+            $updateQueryBuilder->executeQuery();
         }
 
         return true;

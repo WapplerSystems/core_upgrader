@@ -30,7 +30,6 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManager;
 use TYPO3\CMS\Form\Slot\FilePersistenceSlot;
 use TYPO3\CMS\Install\Updates\ChattyInterface;
@@ -135,7 +134,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
     {
         $updateNeeded = false;
 
-        $this->persistenceManager = $this->getObjectManager()->get(FormPersistenceManager::class);
+        $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManager::class);
         $this->resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
 
         foreach ($this->getFormDefinitionsInformation() as $formDefinitionInformation) {
@@ -207,7 +206,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
         $filePersistenceSlot = GeneralUtility::makeInstance(FilePersistenceSlot::class);
 
         $this->connection = $connectionPool->getConnectionForTable('tt_content');
-        $this->persistenceManager = $this->getObjectManager()->get(FormPersistenceManager::class);
+        $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManager::class);
         $this->resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         $this->referenceIndex = GeneralUtility::makeInstance(ReferenceIndex::class);
         $this->flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);
@@ -660,7 +659,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
      */
     protected function hasNewFileExtension(string $persistenceIdentifier): bool
     {
-        return StringUtility::endsWith(
+        return str_ends_with(
             $persistenceIdentifier,
             FormPersistenceManager::FORM_DEFINITION_FILE_EXTENSION
         );
@@ -794,7 +793,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
                     $queryBuilder->createNamedParameter('form_formframework', \PDO::PARAM_STR)
                 )
             )
-            ->execute()
+            ->executeQuery()
             ->fetchAll();
 
         return $records;
@@ -826,11 +825,4 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
         );
     }
 
-    /**
-     * @return ObjectManager
-     */
-    protected function getObjectManager(): ObjectManager
-    {
-        return GeneralUtility::makeInstance(ObjectManager::class);
-    }
 }

@@ -14,15 +14,23 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ArrayParameterType;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate CTypes 'text', 'image' and 'textpic' to 'textmedia' for extension 'frontend'
  */
+#[Operation('contentTypesToTextMedia')]
 class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
 {
+
+    private const TABLE_NAME = 'tt_content';
 
     /**
      * @return string Unique identifier of this updater
@@ -69,11 +77,14 @@ class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
         ) {
             $updateNeeded = false;
         } else {
-            $nonTextmediaCount = $this->getDatabaseConnection()->exec_SELECTcountRows(
-                'uid',
-                'tt_content',
-                'CType IN (\'text\', \'image\', \'textpic\')'
-            );
+            $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tt_content');
+            $queryBuilder->getRestrictions()->removeAll();
+            $nonTextmediaCount = $queryBuilder->count('uid')->from('tt_content')
+                ->where(
+                    $queryBuilder->expr()->in('CType',$queryBuilder->createNamedParameter(['text','image','textpic'], ArrayParameterType::INTEGER))
+                )
+                ->executeQuery()
+                ->fetchOne();
 
             if ($nonTextmediaCount === 0) {
                 $updateNeeded = false;
@@ -182,5 +193,11 @@ class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
 
 
         return true;
+    }
+
+
+    protected function getConnectionPool(): ConnectionPool
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

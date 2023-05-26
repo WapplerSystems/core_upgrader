@@ -67,8 +67,8 @@ class LanguageSortingUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('sorting', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
                 $queryBuilder->expr()->isNotNull('sorting')
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -96,9 +96,9 @@ class LanguageSortingUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('sorting', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
             )
             ->orderBy('title')
-            ->execute();
+            ->executeQuery();
         $sortCounter = 10;
-        while ($languageRecord = $statement->fetch()) {
+        while ($languageRecord = $statement->fetchAssociative()) {
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                 ->getQueryBuilderForTable('sys_language');
             $queryBuilder->update('sys_language')
@@ -109,7 +109,7 @@ class LanguageSortingUpdate implements UpgradeWizardInterface
                     )
                 )
                 ->set('sorting', $sortCounter)
-                ->execute();
+                ->executeQuery();
             $sortCounter += 5;
         }
         return true;

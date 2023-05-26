@@ -162,6 +162,17 @@ $upgrades = [
             'databaseRowsUpdateWizard' => \TYPO3\CMS\v104\Install\Updates\DatabaseRowsUpdateWizard::class,
         ],
     ],
+    'v11.5' => [
+        'legacyCollectionsExtension' => [
+            'legacyCollectionsExtension' => \TYPO3\CMS\v115\Install\Updates\CollectionsExtractionUpdate::class
+        ],
+        'backendUserLanguage' => [
+            'backendUserLanguage' => \TYPO3\CMS\v115\Install\Updates\BackendUserLanguageMigration::class
+        ],
+        'sysLogChannel' => [
+            'sysLogChannel' => \TYPO3\CMS\v115\Install\Updates\SysLogChannel::class
+        ]
+    ]
 ];
 
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('felogin')) {

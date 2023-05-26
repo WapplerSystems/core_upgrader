@@ -1,0 +1,17 @@
+# HEADS UP:
+# This file is intended for NON install tool context services only.
+# Therefore all services in this file are registered explicitly and an
+# include-all directive like `resource: '../Classes/*'` avoided on purpose.
+#
+# All *regular* EXT:install services are registered in
+# TYPO3\CMS\Install\ServiceProvider instead to be usable without DI caches.
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  TYPO3\CMS\v76\Install\Updates\:
+    resource: '../Classes/Updates/v76/*'
+

@@ -156,7 +156,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
                 ->where(
                     $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
                 )
-                ->execute()
+                ->executeQuery()
                 ->fetchColumn();
             return (bool)$numberOfEntries;
         }
@@ -179,7 +179,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
             ->where(
                 $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
             )
-            ->execute()
+            ->executeQuery()
             ->fetchAll();
 
         foreach ($domainEntries as $domainEntry) {

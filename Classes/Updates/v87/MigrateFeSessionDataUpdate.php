@@ -16,8 +16,10 @@ namespace TYPO3\CMS\v87\Install\Updates;
  */
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -25,6 +27,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge sessions from old fe_session_data table into new structure from fe_sessions
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[Operation('migrateFeSessionDataUpdate')]
 class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
 {
     /**
@@ -71,8 +74,8 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
         $queryBuilder->getRestrictions()->removeAll();
         $count = $queryBuilder->count('*')
             ->from('fe_session_data')
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
 
         return $count > 0;
     }
@@ -109,7 +112,7 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
                     $queryBuilder->quoteIdentifier('fe_session_data.hash')
                 )
             )
-            ->execute();
+            ->executeQuery();
 
         $updateQueryBuilder = $connection->createQueryBuilder();
         $updateQueryBuilder->update('fe_sessions')
@@ -124,11 +127,11 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
 
         $connection->beginTransaction();
         try {
-            while ($row = $statement->fetch()) {
+            while ($row = $statement->fetchAssociative()) {
                 $updateStatement->execute([$row['hash'], $row['content']]);
             }
             $connection->commit();
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             $connection->rollBack();
             throw $e;
         }
@@ -162,7 +165,7 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
             $connection->beginTransaction();
             $connection->exec($insertSQL);
             $connection->commit();
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             $connection->rollBack();
             throw $e;
         }
@@ -175,12 +178,13 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
      *
      * @param string $table
      * @return bool
+     * @throws Exception
      */
     protected function checkIfTableExists($table): bool
     {
         $tableExists = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table)
-            ->getSchemaManager()
+            ->createSchemaManager()
             ->tablesExist([$table]);
 
         return $tableExists;

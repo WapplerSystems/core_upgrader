@@ -16,12 +16,14 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Upgrade wizard which goes through all users and groups and set the "replaceFile" permission if "writeFile" is set
  */
+#[Operation('filesReplacePermission')]
 class FilesReplacePermissionUpdate implements UpgradeWizardInterface
 {
 
@@ -68,8 +70,8 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                     $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
                 )
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
 
         if ($notMigratedRowsCount > 0) {
             $updateNeeded = true;
@@ -86,8 +88,8 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                         $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
                     )
                 )
-                ->execute()
-                ->fetchColumn(0);
+                ->executeQuery()
+                ->fetchOne();
             if ($notMigratedRowsCount > 0) {
                 $updateNeeded = true;
             }
@@ -128,8 +130,8 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                         $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
                     )
                 )
-                ->execute();
-            while ($singleRecord = $statement->fetch()) {
+                ->executeQuery();
+            while ($singleRecord = $statement->fetchAssociative()) {
                 $updateQueryBuilder = $connection->createQueryBuilder();
                 $updateQueryBuilder->update($table)
                     ->where(
@@ -138,7 +140,7 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                             $updateQueryBuilder->createNamedParameter((int)$singleRecord['uid'], \PDO::PARAM_INT)
                         )
                     )->set('file_permissions', $singleRecord['file_permissions'] . ',replaceFile')
-                    ->execute();
+                    ->executeQuery();
             }
         }
         return true;

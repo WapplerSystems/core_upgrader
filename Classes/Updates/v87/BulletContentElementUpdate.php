@@ -64,8 +64,8 @@ class BulletContentElementUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('bullets', \PDO::PARAM_STR)),
                 $queryBuilder->expr()->in('layout', [1, 2])
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
         return (bool)$elementCount;
     }
 
@@ -95,8 +95,8 @@ class BulletContentElementUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('bullets', \PDO::PARAM_STR)),
                 $queryBuilder->expr()->in('layout', [1, 2])
             )
-            ->execute();
-        while ($record = $statement->fetch()) {
+            ->executeQuery();
+        while ($record = $statement->fetchAssociative()) {
             $queryBuilder = $connection->createQueryBuilder();
             $queryBuilder->update('tt_content')
                 ->where(
@@ -107,7 +107,7 @@ class BulletContentElementUpdate implements UpgradeWizardInterface
                 )
                 ->set('layout', 0, false)
                 ->set('bullets_type', $record['layout']);
-            $queryBuilder->execute();
+            $queryBuilder->executeQuery();
         }
         return true;
     }

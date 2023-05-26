@@ -85,7 +85,7 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                     $queryBuilder->expr()->neq('urltype', 0),
                     $queryBuilder->expr()->neq('url', $queryBuilder->createPositionalParameter(''))
                 )
-                ->execute()
+                ->executeQuery()
                 ->fetchColumn();
 
             if ($recordsToMigrate > 0) {
@@ -125,9 +125,9 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                     $queryBuilder->expr()->neq('urltype', 0),
                     $queryBuilder->expr()->neq('url', $queryBuilder->createPositionalParameter(''))
                 )
-                ->execute();
+                ->executeQuery();
 
-            while ($row = $statement->fetch()) {
+            while ($row = $statement->fetchAssociative()) {
                 $url = $this->urltypes[(int)$row['urltype']] . $row['url'];
                 $updateQueryBuilder = $connection->createQueryBuilder();
                 $updateQueryBuilder
@@ -140,7 +140,7 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                     )
                     ->set('url', $updateQueryBuilder->createNamedParameter($url), false)
                     ->set('urltype', 0);
-                $updateQueryBuilder->execute();
+                $updateQueryBuilder->executeQuery();
             }
         }
         return true;

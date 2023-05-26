@@ -76,7 +76,7 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                     )
                 )
             )
-            ->execute()->fetchColumn(0);
+            ->executeQuery()->fetchOne();
         return (bool)$elementCount;
     }
 
@@ -118,8 +118,8 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                     )
                 )
             )
-            ->execute();
-        while ($record = $statement->fetch()) {
+            ->executeQuery();
+        while ($record = $statement->fetchAssociative()) {
             $search = 'EXT:fluid_styled_content/Configuration/TypoScript/Static';
             $replace = 'EXT:fluid_styled_content/Configuration/TypoScript';
             $record['include_static_file'] = str_replace($search, $replace, $record['include_static_file']);
@@ -136,7 +136,7 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                 ->set('include_static_file', $record['include_static_file'])
                 ->set('constants', $record['constants'])
                 ->set('config', $record['config']);
-            $queryBuilder->execute();
+            $queryBuilder->executeQuery();
         }
         return true;
     }

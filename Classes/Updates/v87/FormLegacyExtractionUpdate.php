@@ -113,8 +113,8 @@ class FormLegacyExtractionUpdate extends AbstractDownloadExtensionUpdate
                 ->count('*')
                 ->from('tt_content')
                 ->where($queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('mailform')))
-                ->execute()
-                ->fetchColumn(0);
+                ->executeQuery()
+                ->fetchOne();
             if ($count > 0) {
                 $updateNeeded = true;
             }

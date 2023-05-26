@@ -71,7 +71,7 @@ class SplitMenusUpdate implements UpgradeWizardInterface
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('menu', \PDO::PARAM_STR))
             )
-            ->execute()->fetchColumn(0);
+            ->executeQuery()->fetchOne();
         return (bool)$elementCount;
     }
 
@@ -103,8 +103,8 @@ class SplitMenusUpdate implements UpgradeWizardInterface
                     $queryBuilder->createNamedParameter('menu', \PDO::PARAM_STR)
                 )
             )
-            ->execute();
-        while ($record = $statement->fetch()) {
+            ->executeQuery();
+        while ($record = $statement->fetchAssociative()) {
             $queryBuilder = $connection->createQueryBuilder();
             $queryBuilder->update('tt_content')
                 ->where(
@@ -114,7 +114,7 @@ class SplitMenusUpdate implements UpgradeWizardInterface
                     )
                 )
                 ->set('CType', $this->mapMenuTypes($record['menu_type']));
-            $queryBuilder->execute();
+            $queryBuilder->executeQuery();
         }
         return true;
     }

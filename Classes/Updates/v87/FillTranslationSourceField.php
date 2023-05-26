@@ -66,7 +66,7 @@ class FillTranslationSourceField implements UpgradeWizardInterface
                 $queryBuilder->expr()->gt('l18n_parent', $queryBuilder->createNamedParameter(0)),
                 $queryBuilder->expr()->eq('l10n_source', $queryBuilder->createNamedParameter(0))
             ));
-        return (bool)$query->execute()->fetchColumn(0);
+        return (bool)$query->executeQuery()->fetchOne();
     }
 
     /**
@@ -96,7 +96,7 @@ class FillTranslationSourceField implements UpgradeWizardInterface
                 $queryBuilder->expr()->gt('t.l18n_parent', $queryBuilder->createNamedParameter(0)),
                 $queryBuilder->expr()->eq('t.l10n_source', $queryBuilder->createNamedParameter(0))
             ))
-            ->execute();
+            ->executeQuery();
         return true;
     }
 }

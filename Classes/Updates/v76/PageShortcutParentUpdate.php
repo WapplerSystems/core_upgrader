@@ -17,6 +17,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -26,6 +27,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * to remove a possibly selected page as this would cause a different behaviour of the shortcut now
  * since the selected page is now respected in this shortcut mode.
  */
+#[Operation('pageShortcutParent')]
 class PageShortcutParentUpdate implements UpgradeWizardInterface
 {
     /**
@@ -68,8 +70,8 @@ class PageShortcutParentUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->neq('shortcut', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
                 $queryBuilder->expr()->eq('shortcut_mode', $queryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE, \PDO::PARAM_STR))
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -94,7 +96,7 @@ class PageShortcutParentUpdate implements UpgradeWizardInterface
             ->where(
                 $updateQueryBuilder->expr()->neq('shortcut', $updateQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
                 $updateQueryBuilder->expr()->eq('shortcut_mode', $updateQueryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE, \PDO::PARAM_STR))
-            )->set('shortcut', 0)->execute();
+            )->set('shortcut', 0)->executeQuery();
 
         return true;
     }

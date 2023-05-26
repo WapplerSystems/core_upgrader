@@ -16,6 +16,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
@@ -150,5 +151,30 @@ class ExtensionManagerTables implements UpgradeWizardInterface
         }
 
         return !$result;
+    }
+
+    public function getTitle(): string
+    {
+        // TODO: Implement getTitle() method.
+    }
+
+    public function getDescription(): string
+    {
+        // TODO: Implement getDescription() method.
+    }
+
+    public function executeUpdate(): bool
+    {
+        // TODO: Implement executeUpdate() method.
+    }
+
+    public function updateNecessary(): bool
+    {
+        // TODO: Implement updateNecessary() method.
+    }
+
+    public function getPrerequisites(): array
+    {
+        // TODO: Implement getPrerequisites() method.
     }
 }

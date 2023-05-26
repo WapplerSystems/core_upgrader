@@ -86,8 +86,8 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
         $count = $queryBuilder->count('*')
             ->from('sys_history')
             ->where($queryBuilder->expr()->neq('sys_log_uid', 0))
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
 
         return $count > 0;
     }
@@ -170,7 +170,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
                 ->where($queryBuilder->expr()->gt('sys_history.uid', $queryBuilder->createNamedParameter($startPositionAndPhase['uid'])))
                 ->setMaxResults(self::BATCH_SIZE)
                 ->orderBy('sys_history.uid', 'ASC')
-                ->execute()
+                ->executeQuery()
                 ->fetchAll();
 
             foreach ($rows as $row) {
@@ -310,7 +310,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
                 )
                 ->orderBy('uid', 'ASC')
                 ->setMaxResults(self::BATCH_SIZE)
-                ->execute();
+                ->executeQuery();
 
             foreach ($result as $row) {
                 $logData = $this->unserializeToArray((string)($row['log_data'] ?? ''));

@@ -170,7 +170,7 @@ class ImageCropUpdater implements RowUpdaterInterface
                         $queryBuilder->createNamedParameter('{"x":%', \PDO::PARAM_STR)
                     )
                 );
-            if ((int)$query->execute()->fetchColumn(0) > 0) {
+            if ((int)$query->executeQuery()->fetchOne() > 0) {
                 $payload['fields'][] = $fieldName;
                 if (isset($fileReferenceField)) {
                     $payload['fileReferenceField'] = $fileReferenceField;

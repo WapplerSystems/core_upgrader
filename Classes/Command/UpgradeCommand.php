@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IchHabRecht\Upgrader\Command;
+namespace WapplerSystems\Upgrader\Command;
 
 use Helhum\Typo3Console\Mvc\Cli\CommandDispatcher;
 use Symfony\Component\Console\Command\Command;

@@ -16,12 +16,14 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Update backend user setting startModule if set to "help_aboutmodules"
  */
+#[Operation('backendUserStartModule')]
 class BackendUserStartModuleUpdate implements UpgradeWizardInterface
 {
 
@@ -59,8 +61,8 @@ class BackendUserStartModuleUpdate implements UpgradeWizardInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_refindex');
         return (bool)$queryBuilder->count('uid')
             ->from('be_users')
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
     }
 
     /**
@@ -84,8 +86,8 @@ class BackendUserStartModuleUpdate implements UpgradeWizardInterface
         $queryBuilder = $connection->createQueryBuilder();
         $statement = $queryBuilder->select('uid','uc')
             ->from('be_users')
-            ->execute();
-        while ($backendUser = $statement->fetch()) {
+            ->executeQuery();
+        while ($backendUser = $statement->fetchAssociative()) {
 
             if ($backendUser['uc'] !== null) {
                 $userConfig = unserialize($backendUser['uc']);
@@ -99,7 +101,7 @@ class BackendUserStartModuleUpdate implements UpgradeWizardInterface
                                 'uid',
                                 $updateQueryBuilder->createNamedParameter((int)$backendUser['uid'], \PDO::PARAM_INT)
                             )
-                        )->set('uc',serialize($userConfig))->execute();
+                        )->set('uc',serialize($userConfig))->executeQuery();
 
                 }
             }

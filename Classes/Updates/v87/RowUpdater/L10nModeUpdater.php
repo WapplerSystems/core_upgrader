@@ -272,7 +272,7 @@ class L10nModeUpdater implements RowUpdaterInterface
         $statement = $queryBuilder
             ->select(...$selectFieldNames)
             ->andWhere(...$predicates)
-            ->execute();
+            ->executeQuery();
 
         $payload = [];
 
@@ -308,8 +308,8 @@ class L10nModeUpdater implements RowUpdaterInterface
                     $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
                 )
             )
-            ->execute();
+            ->executeQuery();
 
-        return $statement->fetch();
+        return $statement->fetchAssociative();
     }
 }

@@ -69,7 +69,7 @@ class WorkspaceVersionRecordsMigration implements RowUpdaterInterface, LoggerAwa
             // continue processing versions
         }
         // regular versions and placeholders (t3ver_state one of -1, 0, 2, 4 - but not 3) having t3ver_oid set
-        if ((int)$row['t3ver_oid'] > 0 && (int)$row['t3ver_state'] !== VersionState::MOVE_PLACEHOLDER) {
+        if ((int)$row['t3ver_oid'] > 0 && (int)$row['t3ver_state'] !== 3) {
             // We have a live version, let's connect that one
             $liveRecord = $this->fetchPageId($tableName, (int)$row['t3ver_oid']);
             if (is_array($liveRecord)) {
@@ -78,7 +78,7 @@ class WorkspaceVersionRecordsMigration implements RowUpdaterInterface, LoggerAwa
             }
         }
         // move placeholder (t3ver_state=3) pointing to live version in t3ver_move_id
-        if ((int)$row['t3ver_move_id'] > 0 && (int)$row['t3ver_state'] === VersionState::MOVE_PLACEHOLDER) {
+        if ((int)$row['t3ver_move_id'] > 0 && (int)$row['t3ver_state'] === 3) {
             // We have a live version, let's connect that one
             $liveRecord = $this->fetchPageId($tableName, (int)$row['t3ver_move_id']);
             if (is_array($liveRecord)) {

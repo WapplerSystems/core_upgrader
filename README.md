@@ -1,7 +1,7 @@
 # TYPO3 Extension core_upgrader
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/ichhabrecht/core-upgrader.svg)](https://packagist.org/packages/ichhabrecht/core-upgrader)
-[![Build Status](https://img.shields.io/travis/IchHabRecht/core_upgrader/master.svg)](https://travis-ci.org/IchHabRecht/core_upgrader)
+[![Build Status](https://img.shields.io/travis/WapplerSystems/core_upgrader/master.svg)](https://travis-ci.org/WapplerSystems/core_upgrader)
 [![StyleCI](https://styleci.io/repos/263364343/shield?branch=master)](https://styleci.io/repos/263364343)
 
 Run upgrade wizards for multiple TYPO3 versions (to 11.5) at once.

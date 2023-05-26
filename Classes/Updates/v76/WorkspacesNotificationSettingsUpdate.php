@@ -14,13 +14,17 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate the workspaces notification settings to the enhanced schema.
  */
+#[Operation('workspacesNotificationSettingsUpdate')]
 class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
 {
 
@@ -105,9 +109,9 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
      * @param mixed &$customMessages Custom messages
      * @return bool
      */
-    public function executeUpdate(array &$databaseQueries, &$customMessages) : bool
+    public function executeUpdate() : bool
     {
-        $databaseConnection = $this->getDatabaseConnection();
+        $connection = $this->getConnectionPool()->getConnectionForTable('sys_workspace');
 
         $workspaceRecords = $databaseConnection->exec_SELECTgetRows('*', 'sys_workspace', 'deleted=0');
         foreach ($workspaceRecords as $workspaceRecord) {
@@ -127,7 +131,6 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
             }
         }
 
-        $this->markWizardAsDone();
         return true;
     }
 
@@ -209,5 +212,10 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
         $update[$toPrefix . 'notification_preselection'] = $preselection;
 
         return $update;
+    }
+
+    protected function getConnectionPool(): ConnectionPool
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class);
     }
 }

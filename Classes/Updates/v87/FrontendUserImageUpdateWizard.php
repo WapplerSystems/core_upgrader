@@ -213,7 +213,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                 ->orderBy('uid')
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
-                ->execute()
+                ->executeQuery()
                 ->fetchAll();
         } catch (DBALException $e) {
             throw new \RuntimeException(
@@ -267,7 +267,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                         'storage',
                         $queryBuilder->createNamedParameter($storageUid, \PDO::PARAM_INT)
                     )
-                )->execute()->fetch();
+                )->executeQuery()->fetchAssociative();
 
                 // the file exists, the file does not have to be moved again
                 if (is_array($existingFileRecord)) {
@@ -314,7 +314,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                 ];
 
                 $queryBuilder = $connectionPool->getQueryBuilderForTable('sys_file_reference');
-                $queryBuilder->insert('sys_file_reference')->values($fields)->execute();
+                $queryBuilder->insert('sys_file_reference')->values($fields)->executeQuery();
                 ++$i;
             }
         }
@@ -328,7 +328,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                     'uid',
                     $queryBuilder->createNamedParameter($row['uid'], \PDO::PARAM_INT)
                 )
-            )->set($this->fieldToMigrate, $i)->execute();
+            )->set($this->fieldToMigrate, $i)->executeQuery();
         } else {
             $this->recordOffset[$this->table]++;
         }

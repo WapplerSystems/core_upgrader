@@ -142,7 +142,7 @@ class BackendUserConfigurationUpdate implements UpgradeWizardInterface
                 )
             );
 
-        return $statement->execute();
+        return $statement->executeQuery();
     }
 
     private function updateBackendUser(int $userId, array $userConfig): void

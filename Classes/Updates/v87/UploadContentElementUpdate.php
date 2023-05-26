@@ -64,8 +64,8 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('uploads', \PDO::PARAM_STR)),
                 $queryBuilder->expr()->in('layout', [1, 2])
             )
-            ->execute()
-            ->fetchColumn(0);
+            ->executeQuery()
+            ->fetchOne();
         return (bool)$elementCount;
     }
 
@@ -95,8 +95,8 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('uploads', \PDO::PARAM_STR)),
                 $queryBuilder->expr()->in('layout', [1, 2])
             )
-            ->execute();
-        while ($record = $statement->fetch()) {
+            ->executeQuery();
+        while ($record = $statement->fetchAssociative()) {
             $queryBuilder = $connection->createQueryBuilder();
             $queryBuilder->update('tt_content')
                 ->where(
@@ -107,7 +107,7 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
                 )
                 ->set('layout', 0, false)
                 ->set('uploads_type', $record['layout'])
-                ->execute();
+                ->executeQuery();
         }
         return true;
     }
