@@ -91,7 +91,7 @@ class FillTranslationSourceField implements UpgradeWizardInterface
                 $queryBuilder->expr()->gt('t.l18n_parent', $queryBuilder->createNamedParameter(0)),
                 $queryBuilder->expr()->eq('t.l10n_source', $queryBuilder->createNamedParameter(0))
             ))
-            ->executeQuery();
+            ->executeStatement();
         return true;
     }
 }

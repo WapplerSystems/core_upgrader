@@ -301,7 +301,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
                     'uid',
                     $queryBuilder->createNamedParameter($row['uid'], \PDO::PARAM_INT)
                 )
-            )->set($this->fieldToMigrate, $i)->executeQuery();
+            )->set($this->fieldToMigrate, $i)->executeStatement();
         }
     }
 }

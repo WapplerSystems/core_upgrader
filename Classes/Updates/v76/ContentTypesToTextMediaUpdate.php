@@ -37,7 +37,7 @@ class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
      */
     public function getTitle(): string
     {
-        return 'Migrate CTypes text, image and textpic to textmedia and move file relations from "image" to "asset_references"';
+        return 'Migrate CTypes text, image and textpic to textmedia and move file relations from "image" to "assets"';
     }
 
 

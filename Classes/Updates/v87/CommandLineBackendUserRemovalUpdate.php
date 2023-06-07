@@ -123,7 +123,7 @@ class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, Cha
                 // "false" is set as third parameter to have the final
                 // value in $databaseQueries and not a statement placeholder
                 ->set('deleted', 1, false)
-                ->executeQuery();
+                ->executeStatement();
         }
         $this->output->writeln('The following backend users have been deleted:');
         foreach ($usersFound as $user) {

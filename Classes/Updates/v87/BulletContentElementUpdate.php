@@ -102,7 +102,7 @@ class BulletContentElementUpdate implements UpgradeWizardInterface
                 )
                 ->set('layout', 0, false)
                 ->set('bullets_type', $record['layout']);
-            $queryBuilder->executeQuery();
+            $queryBuilder->executeStatement();
         }
         return true;
     }

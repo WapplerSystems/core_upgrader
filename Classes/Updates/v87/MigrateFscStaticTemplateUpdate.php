@@ -131,7 +131,7 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                 ->set('include_static_file', $record['include_static_file'])
                 ->set('constants', $record['constants'])
                 ->set('config', $record['config']);
-            $queryBuilder->executeQuery();
+            $queryBuilder->executeStatement();
         }
         return true;
     }

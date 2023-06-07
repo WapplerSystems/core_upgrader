@@ -104,7 +104,7 @@ class LanguageSortingUpdate implements UpgradeWizardInterface
                     )
                 )
                 ->set('sorting', $sortCounter)
-                ->executeQuery();
+                ->executeStatement();
             $sortCounter += 5;
         }
         return true;

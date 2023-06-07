@@ -117,7 +117,7 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
                     )
                 )
                 ->set('pi_flexform', $this->migrateFlexformSettings($record['pi_flexform']))
-                ->executeQuery();
+                ->executeStatement();
 
             //exit if at least one update statement is not successful
             if (!((bool)$updateResult)) {

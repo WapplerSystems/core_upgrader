@@ -108,7 +108,7 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
                 )
                 ->set('section_frame', 0, false)
                 ->set('frame_class', $this->mapSectionFrame($record['section_frame']));
-            $queryBuilder->executeQuery();
+            $queryBuilder->executeStatement();
         }
         return true;
     }

@@ -109,7 +109,7 @@ class SplitMenusUpdate implements UpgradeWizardInterface
                     )
                 )
                 ->set('CType', $this->mapMenuTypes($record['menu_type']));
-            $queryBuilder->executeQuery();
+            $queryBuilder->executeStatement();
         }
         return true;
     }

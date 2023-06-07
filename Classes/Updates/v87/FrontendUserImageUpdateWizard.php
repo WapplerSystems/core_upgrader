@@ -322,7 +322,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                     'uid',
                     $queryBuilder->createNamedParameter($row['uid'], \PDO::PARAM_INT)
                 )
-            )->set($this->fieldToMigrate, $i)->executeQuery();
+            )->set($this->fieldToMigrate, $i)->executeStatement();
         } else {
             $this->recordOffset[$this->table]++;
         }

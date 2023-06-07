@@ -102,7 +102,7 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
                 )
                 ->set('layout', 0, false)
                 ->set('uploads_type', $record['layout'])
-                ->executeQuery();
+                ->executeStatement();
         }
         return true;
     }
