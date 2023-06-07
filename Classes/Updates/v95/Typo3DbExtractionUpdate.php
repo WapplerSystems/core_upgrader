@@ -29,7 +29,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
 class Typo3DbExtractionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
-     * @var \TYPO3\CMS\Install\Updates\Confirmation
+     * @var Confirmation
      */
     protected $confirmation;
 
@@ -53,7 +53,7 @@ class Typo3DbExtractionUpdate extends AbstractDownloadExtensionUpdate
     /**
      * Return a confirmation message instance
      *
-     * @return \TYPO3\CMS\Install\Updates\Confirmation
+     * @return Confirmation
      */
     public function getConfirmation(): Confirmation
     {

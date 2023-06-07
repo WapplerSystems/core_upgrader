@@ -52,14 +52,6 @@ class Argon2iPasswordHashes implements UpgradeWizardInterface, ConfirmableInterf
     }
 
     /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'argon2iPasswordHashes';
-    }
-
-    /**
      * @return string Title of this updater
      */
     public function getTitle(): string

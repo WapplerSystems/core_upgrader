@@ -67,14 +67,6 @@ class DatabaseRowsUpdateWizard implements UpgradeWizardInterface, RepeatableInte
     }
 
     /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'databaseRowsUpdateWizard';
-    }
-
-    /**
      * @return string Title of this updater
      */
     public function getTitle(): string

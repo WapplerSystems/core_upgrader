@@ -30,7 +30,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
  * to a proper sys_redirect entry.
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('redirectsExtensionUpdate')]
+#[UpgradeWizard('redirects')]
 class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
@@ -63,17 +63,6 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
     public function getConfirmation(): Confirmation
     {
         return $this->confirmation;
-    }
-
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'redirects';
     }
 
     /**

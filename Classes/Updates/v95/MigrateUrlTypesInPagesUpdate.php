@@ -27,7 +27,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge URLs divided in pages.urltype and pages.url into pages.url
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('migrateUrlTypesInPagesUpdate')]
+#[UpgradeWizard('pagesUrltypeField')]
 class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
 {
     /**
@@ -40,13 +40,6 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
      */
     private $urltypes = ['', 'http://', 'ftp://', 'mailto:', 'https://'];
 
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'pagesUrltypeField';
-    }
 
     /**
      * @return string Title of this updater

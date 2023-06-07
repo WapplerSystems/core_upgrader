@@ -28,16 +28,9 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Update the backend user "uc" array to use arrays for its structure, as old TYPO3 versions sometimes used stdClasses
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('backendUserConfigurationUpdate')]
+#[UpgradeWizard('backendUsersConfiguration')]
 class BackendUserConfigurationUpdate implements UpgradeWizardInterface
 {
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'backendUsersConfiguration';
-    }
 
     /**
      * @return string Title of this updater

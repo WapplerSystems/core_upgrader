@@ -38,7 +38,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * and creates sys_file records as well as sys_file_reference records for each hit.
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('backendLayoutIconUpdateWizard')]
+#[UpgradeWizard('backendLayoutIcons')]
 class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -82,13 +82,6 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
      */
     protected $targetPath = '_migrated/backend_layouts/';
 
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'backendLayoutIcons';
-    }
 
     /**
      * @return string Title of this updater

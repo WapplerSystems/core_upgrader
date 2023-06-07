@@ -27,7 +27,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
  * Installs EXT:adminpanel
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('adminPanelInstall')]
+#[UpgradeWizard('adminpanelExtension')]
 class AdminPanelInstall extends AbstractDownloadExtensionUpdate
 {
 
@@ -61,17 +61,6 @@ class AdminPanelInstall extends AbstractDownloadExtensionUpdate
     public function getConfirmation(): Confirmation
     {
         return $this->confirmation;
-    }
-
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'adminpanelExtension';
     }
 
     /**

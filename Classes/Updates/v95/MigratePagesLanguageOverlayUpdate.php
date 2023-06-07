@@ -30,21 +30,13 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge pages_language_overlay rows into pages table
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('migratePagesLanguageOverlayUpdate')]
+#[UpgradeWizard('pagesLanguageOverlay')]
 class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, ChattyInterface
 {
     /**
      * @var OutputInterface
      */
     protected $output;
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'pagesLanguageOverlay';
-    }
 
     /**
      * @return string Title of this updater

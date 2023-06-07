@@ -29,13 +29,6 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 #[UpgradeWizard('migrateFeSessionDataUpdate')]
 class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
 {
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'migrateFeSessionDataUpdate';
-    }
 
     /**
      * @return string Title of this updater

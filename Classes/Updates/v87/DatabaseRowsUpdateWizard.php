@@ -15,6 +15,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\v87\Install\Updates\RowUpdater\ImageCropUpdater;
 use TYPO3\CMS\v87\Install\Updates\RowUpdater\L10nModeUpdater;
 use TYPO3\CMS\v87\Install\Updates\RowUpdater\RteLinkSyntaxUpdater;
@@ -37,6 +38,7 @@ use TYPO3\CMS\v87\Install\Updates\RowUpdater\RteLinkSyntaxUpdater;
  * the job can restart at the position it stopped.
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('databaseRowsUpdateWizard87')]
 class DatabaseRowsUpdateWizard extends \TYPO3\CMS\Install\Updates\DatabaseRowsUpdateWizard
 {
     /**
@@ -48,11 +50,4 @@ class DatabaseRowsUpdateWizard extends \TYPO3\CMS\Install\Updates\DatabaseRowsUp
         RteLinkSyntaxUpdater::class,
     ];
 
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'databaseRowsUpdateWizard87';
-    }
 }

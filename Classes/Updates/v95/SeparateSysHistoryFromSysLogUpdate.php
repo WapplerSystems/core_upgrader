@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\ConnectionException;
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\History\RecordHistoryStore;
@@ -31,7 +33,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge data stored in sys_log that belongs to sys_history
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('separateSysHistoryFromSysLogUpdate')]
+#[UpgradeWizard('separateSysHistoryFromLog')]
 class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, RepeatableInterface
 {
 
@@ -43,14 +45,6 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
 
     /** @var int Phase that adds history records for inserts and deletes */
     private const UPDATE_HISTORY = 1;
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'separateSysHistoryFromLog';
-    }
 
     /**
      * @return string Title of this updater
@@ -73,6 +67,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
      * Checks if an update is needed
      *
      * @return bool Whether an update is needed (true) or not (false)
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
@@ -109,7 +104,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
      * where a reference is still there: sys_history.sys_log_uid > 0
      *
      * @return bool
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws ConnectionException
      * @throws \Exception
      */
     public function executeUpdate(): bool
@@ -144,11 +139,11 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
     }
 
     /**
-     * @param \TYPO3\CMS\Core\Database\Connection $connection
-     * @param \TYPO3\CMS\Core\Database\Connection $connectionForSysRegistry
+     * @param Connection $connection
+     * @param Connection $connectionForSysRegistry
      * @param array $startPositionAndPhase
      * @return array
-     * @throws \Doctrine\DBAL\ConnectionException
+     * @throws ConnectionException
      * @throws \Exception
      */
     protected function moveDataFromSysLogToSysHistory(
@@ -236,8 +231,8 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
      *
      * Also keep track of progress in sys_registry
      *
-     * @param \TYPO3\CMS\Core\Database\Connection $connection
-     * @param \TYPO3\CMS\Core\Database\Connection $connectionForSysRegistry
+     * @param Connection $connection
+     * @param Connection $connectionForSysRegistry
      * @param array $updateData
      * @param array $logData
      * @param array $row
@@ -286,7 +281,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
     /**
      * Add Insert and Delete actions from sys_log to sys_history
      *
-     * @param \TYPO3\CMS\Core\Database\Connection $connectionForSysRegistry
+     * @param Connection $connectionForSysRegistry
      * @param array $startPositionAndPhase
      */
     protected function keepHistoryForInsertAndDeleteActions(

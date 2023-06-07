@@ -42,7 +42,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Update wizard to migrate all forms currently in use to new ending
  * @internal
  */
-#[UpgradeWizard('formFileExtensionUpdate')]
+#[UpgradeWizard('formFileExtension')]
 class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
 {
     /**
@@ -75,16 +75,6 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
      */
     protected $connection;
 
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'formFileExtension';
-    }
 
     /**
      * Return the speaking name of this wizard

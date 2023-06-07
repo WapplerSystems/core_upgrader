@@ -37,7 +37,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  *
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('populatePageSlugs')]
+#[UpgradeWizard('pagesSlugs')]
 class PopulatePageSlugs implements UpgradeWizardInterface
 {
     /**
@@ -49,14 +49,6 @@ class PopulatePageSlugs implements UpgradeWizardInterface
      * @var string
      */
     protected $fieldName = 'slug';
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'pagesSlugs';
-    }
 
     /**
      * @return string Title of this updater

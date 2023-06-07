@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\ChattyInterface;
 use TYPO3\CMS\Install\Updates\ConfirmableInterface;
 use TYPO3\CMS\Install\Updates\Confirmation;
@@ -30,6 +31,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Remove all backend users starting with _cli_
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('commandLineBackendUserRemovalUpdate')]
 class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, ChattyInterface, RepeatableInterface, ConfirmableInterface
 {
     /**
@@ -49,14 +51,6 @@ class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, Cha
             'The following backend users will be removed: ' . implode(', ', $this->getUnneededCommandLineUsers()),
             true
         );
-    }
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'commandLineBackendUserRemovalUpdate';
     }
 
     /**

@@ -61,16 +61,6 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
         'forgot_reset_message'
     ];
 
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'TYPO3\\CMS\\Felogin\\Updates\\MigrateFeloginPlugins';
-    }
 
     /**
      * Return the speaking name of this wizard

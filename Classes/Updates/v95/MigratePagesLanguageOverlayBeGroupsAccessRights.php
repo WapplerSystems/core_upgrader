@@ -20,7 +20,6 @@ namespace TYPO3\CMS\v95\Install\Updates;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
-use TYPO3\CMS\Install\Service\UpgradeWizardsService;
 use TYPO3\CMS\Install\Updates\ConfirmableInterface;
 use TYPO3\CMS\Install\Updates\Confirmation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
@@ -109,7 +108,7 @@ class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardIn
      */
     public function updateNecessary(): bool
     {
-        return !(new UpgradeWizardsService())->isWizardDone($this->getIdentifier());
+        return true;
     }
 
     /**

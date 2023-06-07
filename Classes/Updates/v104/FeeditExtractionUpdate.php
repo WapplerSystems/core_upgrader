@@ -26,16 +26,16 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
  * Installs and downloads EXT:feedit if requested
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[UpgradeWizard('feeditExtractionUpdate')]
+#[UpgradeWizard('feeditExtension')]
 class FeeditExtractionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
-     * @var \TYPO3\CMS\Install\Updates\ExtensionModel
+     * @var ExtensionModel
      */
     protected $extension;
 
     /**
-     * @var \TYPO3\CMS\Install\Updates\Confirmation
+     * @var Confirmation
      */
     protected $confirmation;
 
@@ -59,22 +59,11 @@ class FeeditExtractionUpdate extends AbstractDownloadExtensionUpdate
     /**
      * Return a confirmation message instance
      *
-     * @return \TYPO3\CMS\Install\Updates\Confirmation
+     * @return Confirmation
      */
     public function getConfirmation(): Confirmation
     {
         return $this->confirmation;
-    }
-
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'feeditExtension';
     }
 
     /**
