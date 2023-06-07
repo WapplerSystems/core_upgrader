@@ -179,7 +179,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
                 )
                 ->orderBy('uid')
                 ->executeQuery()
-                ->fetchAll();
+                ->fetchAllAssociative();
         } catch (\Exception $e) {
             throw new \RuntimeException(
                 'Database query failed. Error was: ' . $e->getPrevious()->getMessage(),
@@ -194,7 +194,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
      * @param array $row
      * @throws \Exception
      */
-    protected function migrateField($row)
+    protected function migrateField($row): void
     {
         $fieldItems = GeneralUtility::trimExplode(',', $row[$this->fieldToMigrate], true);
         if (empty($fieldItems) || is_numeric($row[$this->fieldToMigrate])) {

@@ -32,7 +32,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
 class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
-     * @var \TYPO3\CMS\Install\Updates\ExtensionModel
+     * @var ExtensionModel
      */
     protected $extension;
 
@@ -111,7 +111,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $connection = $connectionPool->getConnectionByName('Default');
-        $tableNames = $connection->getSchemaManager()->listTableNames();
+        $tableNames = $connection->createSchemaManager()->listTableNames();
         if (in_array('cache_md5params', $tableNames, true)) {
             // table is available, now check if there are entries in it
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -119,7 +119,7 @@ class RedirectExtractionUpdate extends AbstractDownloadExtensionUpdate
             $numberOfEntries = $queryBuilder->count('*')
                 ->from('cache_md5params')
                 ->executeQuery()
-                ->fetchColumn();
+                ->fetchOne();
             return (bool)$numberOfEntries;
         }
 

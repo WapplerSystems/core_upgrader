@@ -81,7 +81,7 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                     $queryBuilder->expr()->neq('url', $queryBuilder->createPositionalParameter(''))
                 )
                 ->executeQuery()
-                ->fetchColumn();
+                ->fetchOne();
 
             if ($recordsToMigrate > 0) {
                 break;
@@ -151,7 +151,7 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
         foreach ($this->databaseTables as $key => $databaseTable) {
             $columns = GeneralUtility::makeInstance(ConnectionPool::class)
                 ->getConnectionForTable($databaseTable)
-                ->getSchemaManager()
+                ->createSchemaManager()
                 ->listTableColumns($databaseTable);
             if (!isset($columns['urltype'])) {
                 unset($this->databaseTables[$key]);

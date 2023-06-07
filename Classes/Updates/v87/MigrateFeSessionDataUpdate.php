@@ -120,7 +120,7 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
         $connection->beginTransaction();
         try {
             while ($row = $statement->fetchAssociative()) {
-                $updateStatement->execute([$row['hash'], $row['content']]);
+                $updateStatement->executeQuery([$row['hash'], $row['content']]);
             }
             $connection->commit();
         } catch (Exception $e) {
@@ -155,7 +155,7 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
 
         try {
             $connection->beginTransaction();
-            $connection->exec($insertSQL);
+            $connection->executeQuery($insertSQL);
             $connection->commit();
         } catch (Exception $e) {
             $connection->rollBack();

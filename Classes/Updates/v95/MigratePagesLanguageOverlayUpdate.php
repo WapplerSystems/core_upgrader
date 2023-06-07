@@ -138,7 +138,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
             ->from('pages_language_overlay')
             ->executeQuery();
         $pagesConnection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('pages');
-        $pagesColumns = $pagesConnection->getSchemaManager()->listTableDetails('pages')->getColumns();
+        $pagesColumns = $pagesConnection->createSchemaManager()->listTableDetails('pages')->getColumns();
         $pagesColumnTypes = [];
         foreach ($pagesColumns as $pageColumn) {
             $pagesColumnTypes[$pageColumn->getName()] = $pageColumn->getType()->getBindingType();
@@ -328,7 +328,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $connection = $connectionPool->getConnectionByName('Default');
-        $tableNames = $connection->getSchemaManager()->listTableNames();
+        $tableNames = $connection->createSchemaManager()->listTableNames();
         if (in_array('pages_language_overlay', $tableNames, true)) {
             // table is available, now check if there are entries in it
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -336,7 +336,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
             $numberOfEntries = $queryBuilder->count('*')
                 ->from('pages_language_overlay')
                 ->executeQuery()
-                ->fetchColumn();
+                ->fetchOne();
             return (bool)$numberOfEntries;
         }
 

@@ -54,7 +54,7 @@ class SplitMenusUpdate implements UpgradeWizardInterface
     public function updateNecessary(): bool
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tt_content');
-        $tableColumns = $connection->getSchemaManager()->listTableColumns('tt_content');
+        $tableColumns = $connection->createSchemaManager()->listTableColumns('tt_content');
         // Only proceed if menu_type field still exists
         if (!isset($tableColumns['menu_type'])) {
             return false;
@@ -120,7 +120,7 @@ class SplitMenusUpdate implements UpgradeWizardInterface
      * @param string $menuType The content of the FlexForm
      * @return string The equivalent CType
      */
-    protected function mapMenuTypes($menuType)
+    protected function mapMenuTypes($menuType): string
     {
         $mapping = [
             0 => 'menu_pages',

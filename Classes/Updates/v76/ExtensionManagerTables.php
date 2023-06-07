@@ -51,7 +51,7 @@ class ExtensionManagerTables implements UpgradeWizardInterface
      *
      * @return array
      */
-    protected function getUpdateStatements()
+    protected function getUpdateStatements(): array
     {
         $updateStatements = [];
 
@@ -73,7 +73,7 @@ class ExtensionManagerTables implements UpgradeWizardInterface
      * @param string &$description The description for the update
      * @return bool Whether an update is needed (TRUE) or not (FALSE)
      */
-    public function checkForUpdate(&$description)
+    public function checkForUpdate(&$description): bool
     {
         $result = false;
         $description = 'Creates necessary database tables and adds static data for the Extension Manager.';
@@ -116,7 +116,7 @@ class ExtensionManagerTables implements UpgradeWizardInterface
      * @param mixed &$customMessages Custom messages
      * @return bool Whether it worked (TRUE) or not (FALSE)
      */
-    public function performUpdate(array &$dbQueries, &$customMessages)
+    public function performUpdate(array &$dbQueries, &$customMessages): bool
     {
         $result = false;
 

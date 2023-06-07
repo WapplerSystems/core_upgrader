@@ -210,7 +210,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
                 )
             )
             ->executeQuery()
-            ->fetchColumn();
+            ->fetchOne();
         return $numberOfEntries > 0;
     }
 
@@ -260,7 +260,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
     {
         $tableExists = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table)
-            ->getSchemaManager()
+            ->createSchemaManager()
             ->tablesExist([$table]);
 
         return $tableExists;

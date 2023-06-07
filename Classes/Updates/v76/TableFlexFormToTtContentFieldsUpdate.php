@@ -123,7 +123,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
      * @param array $flexForm The content of the FlexForm
      * @return array The fields which need to be updated in the tt_content table
      */
-    protected function mapFieldsFromFlexForm($flexForm)
+    protected function mapFieldsFromFlexForm($flexForm): array
     {
         $fields = [];
 
@@ -186,7 +186,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
      * @param string|NULL $flexFormXml The XML of the FlexForm
      * @return array|NULL Converted XML to array
      */
-    protected function initializeFlexForm($flexFormXml)
+    protected function initializeFlexForm($flexFormXml): ?array
     {
         $flexForm = null;
 
@@ -206,7 +206,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
      * @param string $sheet The sheet on which this value is located
      * @return string The value
      */
-    protected function getFlexFormValue(array $flexForm, $fieldName, $sheet = 'sDEF')
+    protected function getFlexFormValue(array $flexForm, $fieldName, $sheet = 'sDEF'): string
     {
         return $flexForm['data'][$sheet]['lDEF'][$fieldName]['vDEF'];
     }

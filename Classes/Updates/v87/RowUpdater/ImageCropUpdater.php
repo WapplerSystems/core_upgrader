@@ -18,10 +18,10 @@ namespace TYPO3\CMS\v87\Install\Updates\RowUpdater;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\RowUpdater\RowUpdaterInterface;
 
 /**
@@ -70,34 +70,34 @@ class ImageCropUpdater implements RowUpdaterInterface
      * Update single row if needed
      *
      * @param string $tableName
-     * @param array $inputRow Given row data
+     * @param array $row Given row data
      * @return array Modified row data
      */
-    public function updateTableRow(string $tableName, array $inputRow): array
+    public function updateTableRow(string $tableName, array $row): array
     {
         $tablePayload = $this->payload[$tableName];
 
         foreach ($tablePayload['fields'] as $field) {
-            if (strpos($inputRow[$field], '{"x":') === 0) {
-                $cropArray = json_decode($inputRow[$field], true);
+            if (strpos($row[$field], '{"x":') === 0) {
+                $cropArray = json_decode($row[$field], true);
                 if (is_array($cropArray)) {
-                    $file = $this->getFile($inputRow, $tablePayload['fileReferenceField'] ?: 'uid_local');
+                    $file = $this->getFile($row, $tablePayload['fileReferenceField'] ?: 'uid_local');
                     if (null === $file) {
                         continue;
                     }
 
-                    $cropArea = Area::createFromConfiguration(json_decode($inputRow[$field], true));
+                    $cropArea = Area::createFromConfiguration(json_decode($row[$field], true));
                     $cropVariantCollectionConfig = [
                         'default' => [
                             'cropArea' => $cropArea->makeRelativeBasedOnFile($file)->asArray(),
                         ]
                     ];
-                    $inputRow[$field] = json_encode($cropVariantCollectionConfig);
+                    $row[$field] = json_encode($cropVariantCollectionConfig);
                 }
             }
         }
 
-        return $inputRow;
+        return $row;
     }
 
     /**
@@ -111,7 +111,7 @@ class ImageCropUpdater implements RowUpdaterInterface
      *
      * @param string $tableName Table name
      * @return array Payload information for this table
-     * @throws \RuntimeException
+     * @throws \RuntimeException|\Doctrine\DBAL\Exception
      */
     protected function getPayloadForTable(string $tableName): array
     {
@@ -188,9 +188,9 @@ class ImageCropUpdater implements RowUpdaterInterface
      *
      * @param array $row
      * @param string $fieldName
-     * @return \TYPO3\CMS\Core\Resource\File|null
+     * @return File|null
      */
-    private function getFile(array $row, $fieldName)
+    private function getFile(array $row, $fieldName): ?File
     {
         $file = null;
         $fileUid = !empty($row[$fieldName]) ? $row[$fieldName] : null;

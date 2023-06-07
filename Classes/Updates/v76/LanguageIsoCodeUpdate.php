@@ -58,11 +58,7 @@ class LanguageIsoCodeUpdate implements UpgradeWizardInterface
 
         $emptyValue = $this->getDatabaseConnection()->fullQuoteStr('', 'sys_language');
         $migratableLanguageRecords = $this->getDatabaseConnection()->exec_SELECTcountRows('uid', 'sys_language', 'language_isocode=' . $emptyValue . ' AND CAST(static_lang_isocode AS CHAR) != ' . $emptyValue);
-        if ($migratableLanguageRecords === 0) {
-            return false;
-        }
-
-        return true;
+        return $migratableLanguageRecords !== 0;
     }
 
     /**

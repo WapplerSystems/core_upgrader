@@ -66,15 +66,15 @@ class L10nModeUpdater implements RowUpdaterInterface
      * Update single row if needed
      *
      * @param string $tableName
-     * @param array $inputRow Given row data
+     * @param array $row Given row data
      * @return array Modified row data
      */
-    public function updateTableRow(string $tableName, array $inputRow): array
+    public function updateTableRow(string $tableName, array $row): array
     {
-        $currentId = (int)$inputRow['uid'];
+        $currentId = (int)$row['uid'];
 
         if (empty($this->payload[$tableName]['localizations'][$currentId])) {
-            return $inputRow;
+            return $row;
         }
 
         // disable DataHandler hooks for processing this update
@@ -92,17 +92,17 @@ class L10nModeUpdater implements RowUpdaterInterface
         // the admin user is required to defined workspace state when working with DataHandler
         $fakeAdminUser = GeneralUtility::makeInstance(BackendUserAuthentication::class);
         $fakeAdminUser->user = ['uid' => 0, 'username' => '_migration_', 'admin' => 1];
-        $fakeAdminUser->workspace = (int)($inputRow['t3ver_wsid'] ?? 0);
+        $fakeAdminUser->workspace = (int)($row['t3ver_wsid'] ?? 0);
         $GLOBALS['BE_USER'] = $fakeAdminUser;
 
         $tablePayload = $this->payload[$tableName];
 
         $liveId = $currentId;
-        if (!empty($inputRow['t3ver_wsid'])
-            && !empty($inputRow['t3ver_oid'])
-            && !VersionState::cast($inputRow['t3ver_state'])
+        if (!empty($row['t3ver_wsid'])
+            && !empty($row['t3ver_oid'])
+            && !VersionState::cast($row['t3ver_state'])
                 ->equals(VersionState::NEW_PLACEHOLDER_VERSION)) {
-            $liveId = (int)$inputRow['t3ver_oid'];
+            $liveId = (int)$row['t3ver_oid'];
         }
 
         $dataMap = [];
@@ -114,7 +114,7 @@ class L10nModeUpdater implements RowUpdaterInterface
                 if ($fieldMode !== 'mergeIfNotBlank') {
                     continue;
                 }
-                if (!empty($inputRow[$fieldName])) {
+                if (!empty($row[$fieldName])) {
                     $stateUpdates[$fieldName] = State::STATE_CUSTOM;
                 } else {
                     $stateUpdates[$fieldName] = State::STATE_PARENT;
@@ -139,7 +139,7 @@ class L10nModeUpdater implements RowUpdaterInterface
             if ($liveId !== $currentId) {
                 $record = $this->getRow($tableName, $liveId);
             } else {
-                $record = $inputRow;
+                $record = $row;
             }
             foreach ($tablePayload['fieldModes'] as $fieldName => $fieldMode) {
                 if ($fieldMode !== 'exclude') {
@@ -166,7 +166,7 @@ class L10nModeUpdater implements RowUpdaterInterface
         }
 
         // the unchanged(!) state as submitted
-        return $inputRow;
+        return $row;
     }
 
     /**

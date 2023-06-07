@@ -50,4 +50,12 @@ class DatabaseRowsUpdateWizard extends \TYPO3\CMS\Install\Updates\DatabaseRowsUp
         RteLinkSyntaxUpdater::class,
     ];
 
+    /**
+     * @return string Title of this updater
+     */
+    public function getTitle(): string
+    {
+        return 'Execute database migrations on single rows of TYPO3 8.7';
+    }
+
 }

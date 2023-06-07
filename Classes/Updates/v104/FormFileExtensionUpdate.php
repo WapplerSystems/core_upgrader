@@ -340,8 +340,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
         }
 
         $filePersistenceSlot->defineInvocation(
-            FilePersistenceSlot::COMMAND_FILE_RENAME,
-            null
+            FilePersistenceSlot::COMMAND_FILE_RENAME
         );
 
         return $success;
@@ -786,7 +785,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
                 )
             )
             ->executeQuery()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
         return $records;
     }

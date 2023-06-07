@@ -97,8 +97,6 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
     /**
      * Perform the database updates for workspace records
      *
-     * @param array &$databaseQueries Queries done in this update
-     * @param mixed &$customMessages Custom messages
      * @return bool
      */
     public function executeUpdate() : bool
@@ -179,7 +177,7 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
         $settings = 0;
         // Previous setting: "Allow notification settings during stage change"
         if ($record[$fromPrefix . 'allow_notificaton_settings']) {
-            $settings += 1;
+            ++$settings;
         }
         // Previous setting: "All are selected per default (can be changed)"
         if ((int)$record[$fromPrefix . 'notification_mode'] === 0) {

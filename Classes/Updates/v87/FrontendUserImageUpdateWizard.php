@@ -43,7 +43,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
      * Number of records fetched per database query
      * Used to prevent memory overflows for huge databases
      */
-    const RECORDS_PER_QUERY = 1000;
+    private const RECORDS_PER_QUERY = 1000;
 
     /**
      * @var ResourceStorage
@@ -208,7 +208,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                 ->setFirstResult($offset)
                 ->setMaxResults($limit)
                 ->executeQuery()
-                ->fetchAll();
+                ->fetchAllAssociative();
         } catch (\Exception $e) {
             throw new \RuntimeException(
                 'Database query failed. Error was: ' . $e->getPrevious()->getMessage(),

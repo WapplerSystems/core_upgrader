@@ -168,7 +168,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
                 ->setMaxResults(self::BATCH_SIZE)
                 ->orderBy('sys_history.uid', 'ASC')
                 ->executeQuery()
-                ->fetchAll();
+                ->fetchAllAssociative();
 
             foreach ($rows as $row) {
                 $logData = $this->unserializeToArray((string)($row['log_data'] ?? ''));
@@ -362,7 +362,7 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
     {
         $tableColumns = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable($table)
-            ->getSchemaManager()
+            ->createSchemaManager()
             ->listTableColumns($table);
         return isset($tableColumns[$fieldName]);
     }

@@ -54,7 +54,7 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
     public function updateNecessary(): bool
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('tt_content');
-        $tableColumns = $connection->getSchemaManager()->listTableColumns('tt_content');
+        $tableColumns = $connection->createSchemaManager()->listTableColumns('tt_content');
         // Only proceed if section_frame field still exists
         if (!isset($tableColumns['section_frame'])) {
             return false;

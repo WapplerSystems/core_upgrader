@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -34,7 +35,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
 class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
-     * @var \TYPO3\CMS\Install\Updates\Confirmation
+     * @var Confirmation
      */
     protected $confirmation;
 
@@ -58,7 +59,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
     /**
      * Return a confirmation message instance
      *
-     * @return \TYPO3\CMS\Install\Updates\Confirmation
+     * @return Confirmation
      */
     public function getConfirmation(): Confirmation
     {
@@ -126,7 +127,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $connection = $connectionPool->getConnectionByName('Default');
-        $tables = $connection->getSchemaManager()->listTables();
+        $tables = $connection->createSchemaManager()->listTables();
         $tableExists = false;
         foreach ($tables as $table) {
             if (strtolower($table->getName()) === 'sys_domain') {
@@ -136,7 +137,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
         if (!$tableExists) {
             return false;
         }
-        $columns = $connection->getSchemaManager()->listTableColumns('sys_domain');
+        $columns = $connection->createSchemaManager()->listTableColumns('sys_domain');
         if (isset($columns['redirectto'])) {
             // table is available, now check if there are entries in it
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -148,7 +149,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
                     $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
                 )
                 ->executeQuery()
-                ->fetchColumn();
+                ->fetchOne();
             return (bool)$numberOfEntries;
         }
 
@@ -157,6 +158,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
 
     /**
      * Move all sys_domain records with a "redirectTo" value filled (also deleted) to "sys_redirect" record
+     * @throws Exception
      */
     protected function migrateRedirectDomainsToSysRedirect()
     {
@@ -171,7 +173,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
                 $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
             )
             ->executeQuery()
-            ->fetchAll();
+            ->fetchAllAssociative();
 
         foreach ($domainEntries as $domainEntry) {
             $domainName = $domainEntry['domainName'];
@@ -235,7 +237,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
      */
     protected function getDomainDetails(string $domainName): array
     {
-        if (substr($domainName, 0, 4) === 'http') {
+        if (str_starts_with($domainName, 'http')) {
             return parse_url($domainName);
         }
         return parse_url('https://' . $domainName);
