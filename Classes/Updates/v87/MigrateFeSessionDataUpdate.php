@@ -15,11 +15,10 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -27,7 +26,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge sessions from old fe_session_data table into new structure from fe_sessions
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
-#[Operation('migrateFeSessionDataUpdate')]
+#[UpgradeWizard('migrateFeSessionDataUpdate')]
 class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
 {
     /**

@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -26,6 +28,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Update the backend user "uc" array to use arrays for its structure, as old TYPO3 versions sometimes used stdClasses
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('backendUserConfigurationUpdate')]
 class BackendUserConfigurationUpdate implements UpgradeWizardInterface
 {
     /**
@@ -125,6 +128,9 @@ class BackendUserConfigurationUpdate implements UpgradeWizardInterface
         return unserialize($userConfig, ['allowed_classes' => [\stdClass::class]]);
     }
 
+    /**
+     * @throws Exception
+     */
     private function getAffectedBackendUsers(): iterable
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -142,7 +148,7 @@ class BackendUserConfigurationUpdate implements UpgradeWizardInterface
                 )
             );
 
-        return $statement->executeQuery();
+        return $statement->executeQuery()->fetchAllAssociative();
     }
 
     private function updateBackendUser(int $userId, array $userConfig): void

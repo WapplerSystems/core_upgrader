@@ -14,26 +14,19 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate backend shortcut urls
  */
-#[Operation('migrateShortcutUrlsAgain')]
+#[UpgradeWizard('migrateShortcutUrlsAgain')]
 class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
 {
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'migrateShortcutUrlsAgain';
-    }
 
     /**
      * @return string Title of this updater
@@ -79,7 +72,7 @@ class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
      * Performs the database update if shortcuts are available
      *
      * @return bool
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {

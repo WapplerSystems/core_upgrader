@@ -17,7 +17,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -27,16 +27,9 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * to remove a possibly selected page as this would cause a different behaviour of the shortcut now
  * since the selected page is now respected in this shortcut mode.
  */
-#[Operation('pageShortcutParent')]
+#[UpgradeWizard('pageShortcutParent')]
 class PageShortcutParentUpdate implements UpgradeWizardInterface
 {
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'pageShortcutParent';
-    }
 
     /**
      * @return string Title of this updater

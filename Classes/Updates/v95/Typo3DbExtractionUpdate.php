@@ -16,6 +16,7 @@
 namespace TYPO3\CMS\v95\Install\Updates;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\AbstractDownloadExtensionUpdate;
 use TYPO3\CMS\Install\Updates\Confirmation;
 use TYPO3\CMS\Install\Updates\ExtensionModel;
@@ -24,6 +25,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
  * Installs and downloads EXT:typo3db_legacy
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('typo3DbLegacyExtension')]
 class Typo3DbExtractionUpdate extends AbstractDownloadExtensionUpdate
 {
     /**
@@ -58,16 +60,6 @@ class Typo3DbExtractionUpdate extends AbstractDownloadExtensionUpdate
         return $this->confirmation;
     }
 
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'typo3DbLegacyExtension';
-    }
 
     /**
      * Return the speaking name of this wizard

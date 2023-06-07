@@ -14,26 +14,19 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Update backend user setting startModule if set to "help_aboutmodules"
  */
-#[Operation('backendUserStartModule')]
+#[UpgradeWizard('backendUserStartModule')]
 class BackendUserStartModuleUpdate implements UpgradeWizardInterface
 {
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'backendUserStartModule';
-    }
 
     /**
      * @return string Title of this updater
@@ -55,6 +48,7 @@ class BackendUserStartModuleUpdate implements UpgradeWizardInterface
      * Checks if an update is needed
      *
      * @return bool Whether an update is needed (TRUE) or not (FALSE)
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
@@ -79,6 +73,7 @@ class BackendUserStartModuleUpdate implements UpgradeWizardInterface
      * Performs the database update if backend user's startmodule is help_aboutmodules
      *
      * @return bool
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {

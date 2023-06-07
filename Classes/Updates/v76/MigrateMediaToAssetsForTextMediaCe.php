@@ -16,23 +16,16 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate CTypes 'textmedia' to use 'assets' field instead of 'media'
  */
-#[Operation('migrateMediaToAssetsForTextMediaCe')]
+#[UpgradeWizard('migrateMediaToAssetsForTextMediaCe')]
 class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
 {
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'migrateMediaToAssetsForTextMediaCe';
-    }
 
     /**
      * @return string Title of this updater

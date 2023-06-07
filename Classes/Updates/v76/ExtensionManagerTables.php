@@ -16,7 +16,6 @@ namespace TYPO3\CMS\v76\Install\Updates;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**

@@ -15,3 +15,11 @@ services:
   TYPO3\CMS\v76\Install\Updates\:
     resource: '../Classes/Updates/v76/*'
 
+  TYPO3\CMS\v87\Install\Updates\:
+    resource: '../Classes/Updates/v87/*'
+
+  TYPO3\CMS\v95\Install\Updates\:
+    resource: '../Classes/Updates/v95/*'
+
+  TYPO3\CMS\v104\Install\Updates\:
+    resource: '../Classes/Updates/v104/*'

@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
-use Doctrine\DBAL\DBALException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,6 +28,7 @@ use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\ChattyInterface;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
@@ -38,6 +38,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * and creates sys_file records as well as sys_file_reference records for each hit.
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('backendLayoutIconUpdateWizard')]
 class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -186,7 +187,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
                 ->orderBy('uid')
                 ->executeQuery()
                 ->fetchAll();
-        } catch (DBALException $e) {
+        } catch (\Exception $e) {
             throw new \RuntimeException(
                 'Database query failed. Error was: ' . $e->getPrevious()->getMessage(),
                 1511950673

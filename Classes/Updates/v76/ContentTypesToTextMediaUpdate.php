@@ -15,30 +15,22 @@ namespace TYPO3\CMS\v76\Install\Updates;
  */
 
 use Doctrine\DBAL\ArrayParameterType;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Migrate CTypes 'text', 'image' and 'textpic' to 'textmedia' for extension 'frontend'
  */
-#[Operation('contentTypesToTextMedia')]
+#[UpgradeWizard('contentTypesToTextMedia')]
 class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
 {
 
     private const TABLE_NAME = 'tt_content';
 
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'contentTypesToTextMedia';
-    }
 
     /**
      * @return string Title of this updater
@@ -111,8 +103,6 @@ class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
      */
     public function executeUpdate(): bool
     {
-        $databaseConnection = $this->getDatabaseConnection();
-        $databaseConnection->store_lastBuiltQuery = true;
 
         // Update 'text' records
         $databaseConnection->exec_UPDATEquery(
@@ -187,9 +177,6 @@ class ContentTypesToTextMediaUpdate implements UpgradeWizardInterface
                 'explicit_allowdeny',
             ]
         );
-
-        // Store last executed query
-        $databaseQueries[] = str_replace(chr(10), ' ', $databaseConnection->debug_lastBuiltQuery);
 
 
         return true;

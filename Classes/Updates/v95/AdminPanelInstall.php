@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace TYPO3\CMS\v95\Install\Updates;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\AbstractDownloadExtensionUpdate;
 use TYPO3\CMS\Install\Updates\Confirmation;
 use TYPO3\CMS\Install\Updates\ExtensionModel;
@@ -26,6 +27,7 @@ use TYPO3\CMS\Install\Updates\ExtensionModel;
  * Installs EXT:adminpanel
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('adminPanelInstall')]
 class AdminPanelInstall extends AbstractDownloadExtensionUpdate
 {
 

@@ -14,26 +14,19 @@
 
 namespace TYPO3\CMS\v76\Install\Updates;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * Update backend user setting startModule if set to "file_list"
  */
-#[Operation('fileListIsStartModule')]
+#[UpgradeWizard('fileListIsStartModule')]
 class FileListIsStartModuleUpdate implements UpgradeWizardInterface
 {
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'fileListIsStartModule';
-    }
 
     /**
      * @return string Title of this updater
@@ -54,6 +47,7 @@ class FileListIsStartModuleUpdate implements UpgradeWizardInterface
 
     /**
      * @return bool True if there are records to update
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
@@ -78,6 +72,7 @@ class FileListIsStartModuleUpdate implements UpgradeWizardInterface
      * Performs the update
      *
      * @return bool
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {

@@ -21,6 +21,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Versioning\VersionState;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\RowUpdater\RowUpdaterInterface;
 
 /**
@@ -31,6 +32,7 @@ use TYPO3\CMS\Install\Updates\RowUpdater\RowUpdaterInterface;
  *
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('workspaceVersionRecordsMigration')]
 class WorkspaceVersionRecordsMigration implements RowUpdaterInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;

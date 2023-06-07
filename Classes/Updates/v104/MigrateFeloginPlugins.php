@@ -17,16 +17,19 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v104\Install\Updates;
 
+use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * @internal this is a concrete TYPO3 implementation and solely used for EXT:felogin and not part of TYPO3's Core API.
  */
+#[UpgradeWizard('migrateFeloginPlugins')]
 final class MigrateFeloginPlugins implements UpgradeWizardInterface
 {
     /**
@@ -141,6 +144,7 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
      * Looks for fe plugins in tt_content table to be migrated
      *
      * @return bool
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
@@ -148,14 +152,14 @@ final class MigrateFeloginPlugins implements UpgradeWizardInterface
             ->getConnectionForTable('tt_content')
             ->createQueryBuilder();
 
-        $queryBuilder->select('pi_flexform')
+        $queryBuilder->count('pi_flexform')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('login')),
                 $this->getFlexformConstraints($queryBuilder)
             );
 
-        return (bool)$queryBuilder->executeQuery()->fetchColumn();
+        return (bool)$queryBuilder->executeQuery()->fetchOne();
     }
 
     /**

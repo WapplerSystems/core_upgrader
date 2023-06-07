@@ -14,7 +14,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Install\Attribute\Operation;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -23,17 +23,9 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * field language_isocode, if they have used the now deprecated
  * static_lang_isocode
  */
-#[Operation('languageIsoCode')]
+#[UpgradeWizard('languageIsoCode')]
 class LanguageIsoCodeUpdate implements UpgradeWizardInterface
 {
-
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'languageIsoCode';
-    }
 
     /**
      * @return string Title of this updater

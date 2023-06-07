@@ -22,6 +22,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\History\RecordHistoryStore;
 use TYPO3\CMS\Core\Registry;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\RepeatableInterface;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
@@ -30,6 +31,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge data stored in sys_log that belongs to sys_history
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('separateSysHistoryFromSysLogUpdate')]
 class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, RepeatableInterface
 {
 

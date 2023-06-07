@@ -20,6 +20,7 @@ namespace TYPO3\CMS\v95\Install\Updates;
 use TYPO3\CMS\Core\Crypto\PasswordHashing\Argon2iPasswordHash;
 use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\ConfirmableInterface;
 use TYPO3\CMS\Install\Updates\Confirmation;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
@@ -30,6 +31,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * may have to verify argon2i is available on the live servers
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('argon2iPasswordHashes')]
 class Argon2iPasswordHashes implements UpgradeWizardInterface, ConfirmableInterface
 {
     /**

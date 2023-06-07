@@ -16,6 +16,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -23,15 +24,9 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Migrate "fluid_styled_content" static template location
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('migrateFscStaticTemplateUpdate')]
 class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
 {
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'migrateFscStaticTemplateUpdate';
-    }
 
     /**
      * @return string Title of this updater

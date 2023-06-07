@@ -29,9 +29,10 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManager;
+use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManagerInterface;
 use TYPO3\CMS\Form\Slot\FilePersistenceSlot;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\ChattyInterface;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\ReferenceIndexUpdatedPrerequisite;
@@ -41,6 +42,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Update wizard to migrate all forms currently in use to new ending
  * @internal
  */
+#[UpgradeWizard('formFileExtensionUpdate')]
 class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
 {
     /**
@@ -134,7 +136,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
     {
         $updateNeeded = false;
 
-        $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManager::class);
+        $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManagerInterface::class);
         $this->resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
 
         foreach ($this->getFormDefinitionsInformation() as $formDefinitionInformation) {
@@ -206,7 +208,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
         $filePersistenceSlot = GeneralUtility::makeInstance(FilePersistenceSlot::class);
 
         $this->connection = $connectionPool->getConnectionForTable('tt_content');
-        $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManager::class);
+        $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManagerInterface::class);
         $this->resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         $this->referenceIndex = GeneralUtility::makeInstance(ReferenceIndex::class);
         $this->flexFormTools = GeneralUtility::makeInstance(FlexFormTools::class);

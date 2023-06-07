@@ -20,6 +20,7 @@ namespace TYPO3\CMS\v95\Install\Updates;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Service\LoadTcaService;
 use TYPO3\CMS\Install\Updates\ChattyInterface;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
@@ -29,6 +30,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * Merge pages_language_overlay rows into pages table
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('migratePagesLanguageOverlayUpdate')]
 class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, ChattyInterface
 {
     /**

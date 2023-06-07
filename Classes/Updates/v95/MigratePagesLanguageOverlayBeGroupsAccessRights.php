@@ -19,6 +19,7 @@ namespace TYPO3\CMS\v95\Install\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Service\UpgradeWizardsService;
 use TYPO3\CMS\Install\Updates\ConfirmableInterface;
 use TYPO3\CMS\Install\Updates\Confirmation;
@@ -30,12 +31,9 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * into pages
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('pagesLanguageOverlayBeGroupsAccessRights')]
 class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardInterface, ConfirmableInterface
 {
-    public function getIdentifier(): string
-    {
-        return 'pagesLanguageOverlayBeGroupsAccessRights';
-    }
 
     public function getTitle(): string
     {

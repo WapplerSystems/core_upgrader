@@ -13,7 +13,6 @@ namespace TYPO3\CMS\v87\Install\Updates;
  *
  * The TYPO3 project - inspiring people to share!
  */
-use Doctrine\DBAL\DBALException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Core\Environment;
@@ -26,6 +25,7 @@ use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -34,6 +34,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * and creates sys_file records as well as sys_file_reference records for each hit.
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
+#[UpgradeWizard('frontendUserImageUpdateWizard')]
 class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -93,13 +94,6 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
      */
     protected $recordOffset = [];
 
-    /**
-     * @return string Unique identifier of this updater
-     */
-    public function getIdentifier(): string
-    {
-        return 'frontendUserImageUpdateWizard';
-    }
 
     /**
      * @return string Title of this updater
@@ -215,7 +209,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                 ->setMaxResults($limit)
                 ->executeQuery()
                 ->fetchAll();
-        } catch (DBALException $e) {
+        } catch (\Exception $e) {
             throw new \RuntimeException(
                 'Database query failed. Error was: ' . $e->getPrevious()->getMessage(),
                 1476050084

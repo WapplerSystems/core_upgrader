@@ -22,27 +22,19 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\RepeatableInterface;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
 /**
  * @internal this is a concrete TYPO3 implementation and solely used for EXT:felogin and not part of TYPO3's Core API.
  */
+#[UpgradeWizard('migrateFeloginPluginsCtype')]
 final class MigrateFeloginPluginsCtype implements UpgradeWizardInterface, RepeatableInterface
 {
     protected const CTYPE_PIBASE = 'login';
     protected const CTYPE_EXTBASE = 'felogin_login';
 
-    /**
-     * Return the identifier for this wizard
-     * This should be the same string as used in the ext_localconf class registration
-     *
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return 'TYPO3\\CMS\\FrontendLogin\\Updates\\MigrateFeloginPluginsCtype';
-    }
 
     /**
      * Return the speaking name of this wizard
@@ -111,7 +103,7 @@ final class MigrateFeloginPluginsCtype implements UpgradeWizardInterface, Repeat
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter($this->getOldCType()))
             )
-            ->executeQuery()->fetchColumn();
+            ->executeQuery()->fetchOne();
 
         return (bool)$elementCount;
     }
