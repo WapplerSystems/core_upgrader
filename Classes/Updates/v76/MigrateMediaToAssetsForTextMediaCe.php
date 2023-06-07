@@ -98,7 +98,7 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
             )->set('tt_content.assets', 'tt_content.media', false)
             ->set('sys_file_reference.fieldname', 'assets')
             ->set('tt_content.media', 0)
-        ->executeQuery();
+        ->executeStatement();
 
         return true;
     }

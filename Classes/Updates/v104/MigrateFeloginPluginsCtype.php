@@ -80,7 +80,7 @@ final class MigrateFeloginPluginsCtype implements UpgradeWizardInterface, Repeat
                     $queryBuilder->createNamedParameter($this->getOldCType())
                 )
             )
-            ->executeQuery();
+            ->executeStatement();
 
         return true;
     }

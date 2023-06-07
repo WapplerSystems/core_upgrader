@@ -31,6 +31,9 @@ use TYPO3\CMS\Install\Updates\RowUpdater\RowUpdaterInterface;
  */
 class L10nModeUpdater implements RowUpdaterInterface
 {
+
+    public const NEW_PLACEHOLDER_VERSION = -1;
+
     /**
      * List of tables with information about to migrate fields.
      * Created during hasPotentialUpdateForTable(), used in updateTableRow()
@@ -101,7 +104,7 @@ class L10nModeUpdater implements RowUpdaterInterface
         if (!empty($row['t3ver_wsid'])
             && !empty($row['t3ver_oid'])
             && !VersionState::cast($row['t3ver_state'])
-                ->equals(VersionState::NEW_PLACEHOLDER_VERSION)) {
+                ->equals(self::NEW_PLACEHOLDER_VERSION)) {
             $liveId = (int)$row['t3ver_oid'];
         }
 
@@ -248,7 +251,7 @@ class L10nModeUpdater implements RowUpdaterInterface
                 $queryBuilder->expr()->eq(
                     't3ver_state',
                     $queryBuilder->createNamedParameter(
-                        VersionState::NEW_PLACEHOLDER_VERSION,
+                        self::NEW_PLACEHOLDER_VERSION,
                         \PDO::PARAM_INT
                     )
                 ),

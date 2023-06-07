@@ -110,7 +110,7 @@ class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
                         'uid',
                         $updateQueryBuilder->createNamedParameter((int)$record['uid'], \PDO::PARAM_INT)
                     )
-                )->set('url', $encodedUrl)->executeQuery();
+                )->set('url', $encodedUrl)->executeStatement();
 
         }
         return true;

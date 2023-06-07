@@ -119,7 +119,7 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
                             $updateQueryBuilder->createNamedParameter((int)$row['uid'], \PDO::PARAM_INT)
                         )
                     )
-                    ->set($field, implode(',', $moduleList))->executeQuery();
+                    ->set($field, implode(',', $moduleList))->executeStatement();
 
             }
         }

@@ -223,7 +223,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                                     $foreignTableQueryBuilder->createNamedParameter('pages_language_overlay', \PDO::PARAM_STR)
                                 )
                             )
-                            ->executeQuery();
+                            ->executeStatement();
                     }
                 }
             }
@@ -265,7 +265,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                         $historyTableQueryBuilder->createNamedParameter('pages_language_overlay', \PDO::PARAM_STR)
                     )
                 )
-                ->executeQuery();
+                ->executeStatement();
         }
     }
 

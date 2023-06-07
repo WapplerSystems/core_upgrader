@@ -89,7 +89,7 @@ class PageShortcutParentUpdate implements UpgradeWizardInterface
             ->where(
                 $updateQueryBuilder->expr()->neq('shortcut', $updateQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
                 $updateQueryBuilder->expr()->eq('shortcut_mode', $updateQueryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE, \PDO::PARAM_STR))
-            )->set('shortcut', 0)->executeQuery();
+            )->set('shortcut', 0)->executeStatement();
 
         return true;
     }

@@ -135,7 +135,7 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                     )
                     ->set('url', $updateQueryBuilder->createNamedParameter($url), false)
                     ->set('urltype', 0);
-                $updateQueryBuilder->executeQuery();
+                $updateQueryBuilder->executeStatement();
             }
         }
         return true;

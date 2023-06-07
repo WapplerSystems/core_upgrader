@@ -132,7 +132,7 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                             $updateQueryBuilder->createNamedParameter((int)$singleRecord['uid'], \PDO::PARAM_INT)
                         )
                     )->set('file_permissions', $singleRecord['file_permissions'] . ',replaceFile')
-                    ->executeQuery();
+                    ->executeStatement();
             }
         }
         return true;

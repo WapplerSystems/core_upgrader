@@ -96,7 +96,7 @@ class FileListIsStartModuleUpdate implements UpgradeWizardInterface
                                 'uid',
                                 $updateQueryBuilder->createNamedParameter((int)$backendUser['uid'], \PDO::PARAM_INT)
                             )
-                        )->set('uc',serialize($userConfig))->executeQuery();
+                        )->set('uc',serialize($userConfig))->executeStatement();
 
                 }
             }

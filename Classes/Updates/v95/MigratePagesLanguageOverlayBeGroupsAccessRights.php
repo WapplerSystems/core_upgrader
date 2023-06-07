@@ -97,7 +97,7 @@ class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardIn
                             $updateBeGroupsQueryBuilder->createNamedParameter($beGroupsRow['uid'], \PDO::PARAM_INT)
                         )
                     )
-                    ->executeQuery();
+                    ->executeStatement();
             }
         }
         return true;

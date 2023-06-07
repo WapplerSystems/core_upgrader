@@ -125,7 +125,7 @@ class FileReferenceUpdate implements UpgradeWizardInterface
                 $updateQueryBuilder->set('deleted', 1);
             }
 
-            $updateQueryBuilder->executeQuery();
+            $updateQueryBuilder->executeStatement();
         }
 
         return true;
