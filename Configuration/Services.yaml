@@ -23,7 +23,3 @@ services:
 
   TYPO3\CMS\v104\Install\Updates\:
     resource: '../Classes/Updates/v104/*'
-
-  WapplerSystems\Upgrader\Command\UpgradeCommand:
-    tags:
-      - { name: 'console.command', command: 'coreupgrader2:unlock', description: 'Unlock the TYPO3 Backend' }
