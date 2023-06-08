@@ -41,7 +41,7 @@
     },
     "extra": {
         "typo3/cms": {
-            "extension-key": "core_upgrader2",
+            "extension-key": "core_upgrader2"
         }
     }
 }
