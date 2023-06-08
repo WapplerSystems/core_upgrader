@@ -181,12 +181,11 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
             $sourceDetails = $this->getDomainDetails($domainName);
             $targetDetails = $this->getDomainDetails($target);
             $redirectRecord = [
-                'deleted' => (int)$domainEntry['deleted'],
-                'disabled' => (int)$domainEntry['hidden'],
+                'deleted' => (int)($domainEntry['deleted'] ?? 0),
+                'disabled' => (int)($domainEntry['hidden'] ?? 0),
                 'createdon' => (int)$domainEntry['crdate'],
-                'createdby' => (int)$domainEntry['cruser_id'],
                 'updatedon' => (int)$domainEntry['tstamp'],
-                'source_host' => $sourceDetails['host'] . ($sourceDetails['port'] ? ':' . $sourceDetails['port'] : ''),
+                'source_host' => $sourceDetails['host'] . (isset($sourceDetails['port']) ? ':' . $sourceDetails['port'] : ''),
                 'keep_query_parameters' => (int)$domainEntry['prepend_params'],
                 'target_statuscode' => (int)$domainEntry['redirectHttpStatusCode'],
                 'target' => $target

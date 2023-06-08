@@ -1,7 +1,7 @@
 <?php
 
 /***************************************************************
- * Extension Manager/Repository config file for ext "core_upgrader".
+ * Extension Manager/Repository config file for ext "core_upgrader2".
  *
  * Auto generated 21-02-2021 18:57
  *
@@ -18,9 +18,6 @@ $EM_CONF[$_EXTKEY] = [
   'author_email' => 'typo3@wappler.systems',
   'author_company' => 'WapplerSystems',
   'state' => 'stable',
-  'uploadfolder' => 0,
-  'createDirs' => '',
-  'clearcacheonload' => 0,
   'version' => '12.0.0',
   'constraints' => 
   [
