@@ -86,7 +86,7 @@ class FileListIsStartModuleUpdate implements UpgradeWizardInterface
 
             if ($backendUser['uc'] !== null) {
                 $userConfig = unserialize($backendUser['uc']);
-                if ($userConfig['startModule'] === 'file_list') {
+                if (isset($userConfig['startModule']) && $userConfig['startModule'] === 'file_list') {
                     $userConfig['startModule'] = 'file_FilelistList';
 
                     $updateQueryBuilder = $connection->createQueryBuilder();
