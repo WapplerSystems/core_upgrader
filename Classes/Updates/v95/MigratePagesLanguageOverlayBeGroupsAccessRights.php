@@ -108,7 +108,21 @@ class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardIn
      */
     public function updateNecessary(): bool
     {
-        return true;
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $connection = $connectionPool->getConnectionByName('Default');
+        $tableNames = $connection->createSchemaManager()->listTableNames();
+        if (in_array('pages_language_overlay', $tableNames, true)) {
+            // table is available, now check if there are entries in it
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getQueryBuilderForTable('pages_language_overlay');
+            $numberOfEntries = $queryBuilder->count('*')
+                ->from('pages_language_overlay')
+                ->executeQuery()
+                ->fetchOne();
+            return (bool)$numberOfEntries;
+        }
+
+        return false;
     }
 
     /**
