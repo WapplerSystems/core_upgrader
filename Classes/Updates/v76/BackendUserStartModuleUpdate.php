@@ -86,8 +86,8 @@ class BackendUserStartModuleUpdate implements UpgradeWizardInterface
 
             if ($backendUser['uc'] !== null) {
                 $userConfig = unserialize($backendUser['uc']);
-                if ($userConfig['startModule'] === 'help_aboutmodules') {
-                    $userConfig['startModule'] = 'help_AboutmodulesAboutmodules';
+                if (isset($userConfig['startModule']) && $userConfig['startModule'] === 'help_aboutmodules') {
+                    $userConfig['startModule'] = 'dashboard';
 
                     $updateQueryBuilder = $connection->createQueryBuilder();
                     $updateQueryBuilder->update('be_users')
