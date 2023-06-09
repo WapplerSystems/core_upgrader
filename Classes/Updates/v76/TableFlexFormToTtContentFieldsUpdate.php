@@ -42,7 +42,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
     public function getDescription(): string
     {
         return 'The extension "frontend" uses regular database fields in the tt_content table ' .
-            'for the CType "table". Before this was a FlexForm.<br /><br />' .
+            'for the CType "table". Before this was a FlexForm. ' .
             'This update wizard migrates these FlexForms to regular database fields.';
     }
 
