@@ -9,6 +9,11 @@ Run upgrade wizards for multiple TYPO3 versions (to 12.4) at once.
 
 This extension allows to upgrade the TYPO3 core from v7.6 to v10.4 with this extension and the rest by the v12 core in one step.
 
+Differences from the original Core Upgrade Wizards:
+
+* The Text/Textpic/Image to Textmedia Wizard has been split into optional wizards
+* Some obsolete wizards were removed, because their result cannot be used in version 12 already.
+
 ## Installation
 
 Simply install the extension with Composer or download from [TER](https://extensions.typo3.org/extension/core_upgrader2/).
