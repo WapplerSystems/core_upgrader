@@ -1,7 +1,6 @@
 # TYPO3 Extension core_upgrader2
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/wapplersystems/core-upgrader.svg)](https://packagist.org/packages/ichhabrecht/core-upgrader)
-[![Build Status](https://img.shields.io/travis/WapplerSystems/core_upgrader/master.svg)](https://travis-ci.org/WapplerSystems/core_upgrader)
 
 Run upgrade wizards for multiple TYPO3 versions (to 12.4) at once.
 
