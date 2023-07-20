@@ -85,7 +85,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
     {
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-        $result = $queryBuilder->select('uid, pi_flexform')
+        $result = $queryBuilder->select('uid', 'pi_flexform')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table', \PDO::PARAM_STR)),
@@ -208,6 +208,6 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
      */
     protected function getFlexFormValue(array $flexForm, $fieldName, $sheet = 'sDEF'): string
     {
-        return $flexForm['data'][$sheet]['lDEF'][$fieldName]['vDEF'];
+        return $flexForm['data'][$sheet]['lDEF'][$fieldName]['vDEF'] ?? '';
     }
 }
