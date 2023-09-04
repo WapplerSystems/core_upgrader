@@ -199,11 +199,19 @@ class ImageCropUpdater implements RowUpdaterInterface
         }
         if (MathUtility::canBeInterpretedAsInteger($fileUid)) {
             try {
-                $file = ResourceFactory::getInstance()->getFileObject((int)$fileUid);
+                $file = $this->getResourceFactory()->getFileObject((int)$fileUid);
             } catch (FileDoesNotExistException $e) {
             } catch (\InvalidArgumentException $e) {
             }
         }
         return $file;
+    }
+
+    /**
+     * @return ResourceFactory
+     */
+    protected function getResourceFactory(): ResourceFactory
+    {
+        return GeneralUtility::makeInstance(ResourceFactory::class);
     }
 }
