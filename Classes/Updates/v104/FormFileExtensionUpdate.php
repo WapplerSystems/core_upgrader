@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManager;
@@ -125,6 +126,10 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
     public function updateNecessary(): bool
     {
         $updateNeeded = false;
+
+        if (ExtensionManagementUtility::isLoaded('form') === false) {
+            return false;
+        }
 
         $this->persistenceManager = GeneralUtility::makeInstance(FormPersistenceManagerInterface::class);
         $this->resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
