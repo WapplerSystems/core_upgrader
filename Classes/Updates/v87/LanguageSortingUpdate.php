@@ -54,6 +54,10 @@ class LanguageSortingUpdate implements UpgradeWizardInterface
      */
     public function updateNecessary(): bool
     {
+        if (!$this->checkIfTableExists('sys_language')) {
+            return false;
+        }
+
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('sys_language');
         return (bool)$queryBuilder->count('uid')
@@ -108,5 +112,15 @@ class LanguageSortingUpdate implements UpgradeWizardInterface
             $sortCounter += 5;
         }
         return true;
+    }
+
+    protected function checkIfTableExists(string $table): bool
+    {
+        $tableExists = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($table)
+            ->createSchemaManager()
+            ->tablesExist([$table]);
+
+        return $tableExists;
     }
 }
