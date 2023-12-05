@@ -10,27 +10,19 @@
  * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF[$_EXTKEY] = [
-  'title' => 'Core upgrader',
-  'description' => 'Run upgrade wizards for multiple TYPO3 versions at once',
-  'category' => 'cli',
-  'author' => 'Sven Wappler',
-  'author_email' => 'typo3@wappler.systems',
-  'author_company' => 'WapplerSystems',
-  'state' => 'stable',
-  'version' => '12.0.0',
-  'constraints' => 
-  [
-    'depends' => 
-    [
-      'typo3' => '12.4.0-12.4.99',
+$EM_CONF['core_upgrader2'] = [
+    'title' => 'Core upgrader',
+    'description' => 'Run upgrade wizards for multiple TYPO3 versions at once',
+    'category' => 'cli',
+    'author' => 'Sven Wappler',
+    'author_email' => 'typo3@wappler.systems',
+    'author_company' => 'WapplerSystems',
+    'state' => 'stable',
+    'version' => '12.0.1',
+    'constraints' => [
+        'depends' => [
+            'typo3' => '12.4.0-12.4.99',
+        ],
     ],
-    'conflicts' => 
-    [
-    ],
-    'suggests' => 
-    [
-    ],
-  ],
 ];
 
