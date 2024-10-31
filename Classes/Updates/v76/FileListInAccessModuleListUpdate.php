@@ -15,6 +15,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -63,7 +64,7 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
             $count = $queryBuilder->count('*')
                 ->from($table)
                 ->where(
-                    $queryBuilder->expr()->inSet($field, $queryBuilder->createNamedParameter('file_list', \PDO::PARAM_STR))
+                    $queryBuilder->expr()->inSet($field, $queryBuilder->createNamedParameter('file_list'))
                 )
                 ->executeQuery()
                 ->fetchOne();
@@ -102,7 +103,7 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
             $statement = $queryBuilder->select('uid', $field)
                 ->from($table)
                 ->where(
-                    $queryBuilder->expr()->inSet($field, $queryBuilder->createNamedParameter('file_list', \PDO::PARAM_STR))
+                    $queryBuilder->expr()->inSet($field, $queryBuilder->createNamedParameter('file_list'))
                 )
                 ->executeQuery();
             while ($row = $statement->fetchAssociative()) {
@@ -116,7 +117,7 @@ class FileListInAccessModuleListUpdate implements UpgradeWizardInterface
                     ->where(
                         $updateQueryBuilder->expr()->eq(
                             'uid',
-                            $updateQueryBuilder->createNamedParameter((int)$row['uid'], \PDO::PARAM_INT)
+                            $updateQueryBuilder->createNamedParameter((int)$row['uid'], ParameterType::INTEGER)
                         )
                     )
                     ->set($field, implode(',', $moduleList))->executeStatement();

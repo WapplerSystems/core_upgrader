@@ -122,6 +122,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
      *
      * @return bool
      * @throws \InvalidArgumentException
+     * @throws Exception
      */
     protected function checkIfWizardIsRequired(): bool
     {
@@ -146,7 +147,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
             $numberOfEntries = $queryBuilder->count('*')
                 ->from('sys_domain')
                 ->where(
-                    $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
+                    $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter(''))
                 )
                 ->executeQuery()
                 ->fetchOne();
@@ -170,7 +171,7 @@ class RedirectsExtensionUpdate extends AbstractDownloadExtensionUpdate
         $domainEntries = $queryBuilder->select('*')
             ->from('sys_domain')
             ->where(
-                $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter('', \PDO::PARAM_STR))
+                $queryBuilder->expr()->neq('redirectTo', $queryBuilder->createNamedParameter(''))
             )
             ->executeQuery()
             ->fetchAllAssociative();

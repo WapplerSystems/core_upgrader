@@ -58,7 +58,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
         return (bool)$queryBuilder->count('uid')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table', \PDO::PARAM_STR)),
+                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table')),
                 $queryBuilder->expr()->isNotNull('pi_flexform')
             )
             ->executeQuery()
@@ -88,7 +88,7 @@ class TableFlexFormToTtContentFieldsUpdate implements UpgradeWizardInterface
         $result = $queryBuilder->select('uid', 'pi_flexform')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table', \PDO::PARAM_STR)),
+                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('table')),
                 $queryBuilder->expr()->isNotNull('pi_flexform')
             )
             ->executeQuery();

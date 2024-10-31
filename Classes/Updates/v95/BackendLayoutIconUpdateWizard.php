@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -169,7 +171,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
                     $queryBuilder->expr()->isNotNull($this->fieldToMigrate),
                     $queryBuilder->expr()->neq(
                         $this->fieldToMigrate,
-                        $queryBuilder->createNamedParameter('', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('')
                     ),
                     $queryBuilder->expr()->comparison(
                         'CAST(CAST(' . $queryBuilder->quoteIdentifier($this->fieldToMigrate) . ' AS DECIMAL) AS CHAR)',
@@ -193,6 +195,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
      *
      * @param array $row
      * @throws \Exception
+     * @throws Exception
      */
     protected function migrateField($row): void
     {
@@ -226,11 +229,11 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
                 $existingFileRecord = $queryBuilder->select('uid')->from('sys_file')->where(
                     $queryBuilder->expr()->eq(
                         'sha1',
-                        $queryBuilder->createNamedParameter($fileSha1, \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter($fileSha1)
                     ),
                     $queryBuilder->expr()->eq(
                         'storage',
-                        $queryBuilder->createNamedParameter($storageUid, \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($storageUid, ParameterType::INTEGER)
                     )
                 )->executeQuery()->fetchAssociative();
 
@@ -299,7 +302,7 @@ class BackendLayoutIconUpdateWizard implements UpgradeWizardInterface, ChattyInt
             $queryBuilder->update($this->table)->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($row['uid'], \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($row['uid'], ParameterType::INTEGER)
                 )
             )->set($this->fieldToMigrate, $i)->executeStatement();
         }

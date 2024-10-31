@@ -111,10 +111,10 @@ class MigrateFeSessionDataUpdate implements UpgradeWizardInterface
             ->where(
                 $updateQueryBuilder->expr()->eq(
                     'ses_id',
-                    $updateQueryBuilder->createPositionalParameter('', \PDO::PARAM_STR)
+                    $updateQueryBuilder->createPositionalParameter('')
                 )
             )
-            ->set('ses_data', $updateQueryBuilder->createPositionalParameter('', \PDO::PARAM_STR), false);
+            ->set('ses_data', $updateQueryBuilder->createPositionalParameter(''), false);
         $updateStatement = $connection->prepare($updateQueryBuilder->getSQL());
 
         $connection->beginTransaction();

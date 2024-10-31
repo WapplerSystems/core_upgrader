@@ -14,6 +14,8 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -91,6 +93,7 @@ class LanguageIsoCodeUpdate implements UpgradeWizardInterface
      * data of the old relation.
      *
      * @return bool
+     * @throws Exception
      */
     public function executeUpdate(): bool
     {
@@ -115,7 +118,7 @@ class LanguageIsoCodeUpdate implements UpgradeWizardInterface
                 ->select('*')
                 ->from('static_languages')
                 ->where(
-                    $queryBuilderStaticLanguages->expr()->eq('uid', $queryBuilderStaticLanguages->createNamedParameter((int)$languageRecord['static_lang_isocode'], \PDO::PARAM_INT))
+                    $queryBuilderStaticLanguages->expr()->eq('uid', $queryBuilderStaticLanguages->createNamedParameter((int)$languageRecord['static_lang_isocode'], ParameterType::INTEGER))
                 )
                 ->executeQuery()
                 ->fetchAssociative();

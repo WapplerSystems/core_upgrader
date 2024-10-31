@@ -14,6 +14,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -59,15 +60,15 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->or(
                     $queryBuilder->expr()->like(
                         'constants',
-                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%')
                     ),
                     $queryBuilder->expr()->like(
                         'config',
-                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%')
                     ),
                     $queryBuilder->expr()->like(
                         'include_static_file',
-                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%')
                     )
                 )
             )
@@ -101,15 +102,15 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                 $queryBuilder->expr()->or(
                     $queryBuilder->expr()->like(
                         'constants',
-                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%')
                     ),
                     $queryBuilder->expr()->like(
                         'config',
-                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%')
                     ),
                     $queryBuilder->expr()->like(
                         'include_static_file',
-                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('%EXT:fluid_styled_content/Configuration/TypoScript/Static%')
                     )
                 )
             )
@@ -125,7 +126,7 @@ class MigrateFscStaticTemplateUpdate implements UpgradeWizardInterface
                 ->where(
                     $queryBuilder->expr()->eq(
                         'uid',
-                        $queryBuilder->createNamedParameter($record['uid'], \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($record['uid'], ParameterType::INTEGER)
                     )
                 )
                 ->set('include_static_file', $record['include_static_file'])

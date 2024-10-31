@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace TYPO3\CMS\v12\Install\Updates;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -206,11 +207,11 @@ final class RemoveOrphanedSysCategoryMMRecords implements UpgradeWizardInterface
                     ->where(
                         $queryBuilder->expr()->eq(
                             'uid_local',
-                            $queryBuilder->createNamedParameter($row['uid_local'], \PDO::PARAM_INT)
+                            $queryBuilder->createNamedParameter($row['uid_local'], ParameterType::INTEGER)
                         ),
                         $queryBuilder->expr()->eq(
                             'uid_foreign',
-                            $queryBuilder->createNamedParameter($row['uid_foreign'], \PDO::PARAM_INT)
+                            $queryBuilder->createNamedParameter($row['uid_foreign'], ParameterType::INTEGER)
                         ),
                         $queryBuilder->expr()->eq(
                             'tablenames',
@@ -336,11 +337,11 @@ final class RemoveOrphanedSysCategoryMMRecords implements UpgradeWizardInterface
                         ->where(
                             $queryBuilder->expr()->eq(
                                 'uid_local',
-                                $queryBuilder->createNamedParameter($row['uid_local'], \PDO::PARAM_INT)
+                                $queryBuilder->createNamedParameter($row['uid_local'], ParameterType::INTEGER)
                             ),
                             $queryBuilder->expr()->eq(
                                 'uid_foreign',
-                                $queryBuilder->createNamedParameter($row['uid_foreign'], \PDO::PARAM_INT)
+                                $queryBuilder->createNamedParameter($row['uid_foreign'], ParameterType::INTEGER)
                             ),
                             $queryBuilder->expr()->eq(
                                 'tablenames',

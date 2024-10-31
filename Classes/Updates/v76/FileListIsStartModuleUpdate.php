@@ -15,6 +15,7 @@
 namespace TYPO3\CMS\v76\Install\Updates;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -94,7 +95,7 @@ class FileListIsStartModuleUpdate implements UpgradeWizardInterface
                         ->where(
                             $updateQueryBuilder->expr()->eq(
                                 'uid',
-                                $updateQueryBuilder->createNamedParameter((int)$backendUser['uid'], \PDO::PARAM_INT)
+                                $updateQueryBuilder->createNamedParameter((int)$backendUser['uid'], ParameterType::INTEGER)
                             )
                         )->set('uc',serialize($userConfig))->executeStatement();
 

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -130,7 +131,7 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                     ->where(
                         $updateQueryBuilder->expr()->eq(
                             'uid',
-                            $updateQueryBuilder->createNamedParameter($row['uid'], \PDO::PARAM_INT)
+                            $updateQueryBuilder->createNamedParameter($row['uid'], ParameterType::INTEGER)
                         )
                     )
                     ->set('url', $updateQueryBuilder->createNamedParameter($url), false)

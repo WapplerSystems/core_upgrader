@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManager;
 use TYPO3\CMS\Form\Mvc\Persistence\FormPersistenceManagerInterface;
 use TYPO3\CMS\Form\Slot\FilePersistenceSlot;
@@ -38,8 +39,12 @@ use TYPO3\CMS\Install\Updates\ChattyInterface;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\ReferenceIndexUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
+use TYPO3\CMS\Form\Mvc\Configuration\ConfigurationManagerInterface as ExtFormConfigurationManagerInterface;
 
 /**
+ *
+ * TODO: make v13 compatible
+ *
  * Update wizard to migrate all forms currently in use to new ending
  * @internal
  */
@@ -75,6 +80,12 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
      * @var Connection
      */
     protected $connection;
+
+
+    public function __construct(
+        protected readonly FormPersistenceManagerInterface $formPersistenceManager,
+        protected readonly ExtFormConfigurationManagerInterface $extFormConfigurationManager,
+    ) {}
 
 
     /**
@@ -125,6 +136,8 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
      */
     public function updateNecessary(): bool
     {
+        return false;
+
         $updateNeeded = false;
 
         if (ExtensionManagementUtility::isLoaded('form') === false) {
@@ -364,6 +377,19 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
         $formDefinitionsInformation = $this->enrichFormDefinitionsInformationWithDataFromReferences($formDefinitionsInformation);
 
         return $formDefinitionsInformation;
+    }
+
+
+    protected function getFormSettings(): array
+    {
+        $typoScriptSettings = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS, 'form');
+        $formSettings = $this->extFormConfigurationManager->getYamlConfiguration($typoScriptSettings, false);
+        if (!isset($formSettings['formManager'])) {
+            // Config sub array formManager is crucial and should always exist. If it does
+            // not, this indicates an issue in config loading logic. Except in this case.
+            throw new \LogicException('Configuration could not be loaded', 1723717461);
+        }
+        return $formSettings;
     }
 
     /**
@@ -786,7 +812,7 @@ class FormFileExtensionUpdate implements ChattyInterface, UpgradeWizardInterface
             ->where(
                 $queryBuilder->expr()->eq(
                     'CType',
-                    $queryBuilder->createNamedParameter('form_formframework', \PDO::PARAM_STR)
+                    $queryBuilder->createNamedParameter('form_formframework')
                 )
             )
             ->executeQuery()

@@ -14,6 +14,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -56,7 +57,7 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
         $elementCount = $queryBuilder->count('uid')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('uploads', \PDO::PARAM_STR)),
+                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('uploads')),
                 $queryBuilder->expr()->in('layout', [1, 2])
             )
             ->executeQuery()
@@ -87,7 +88,7 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
         $statement = $queryBuilder->select('uid', 'layout')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('uploads', \PDO::PARAM_STR)),
+                $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('uploads')),
                 $queryBuilder->expr()->in('layout', [1, 2])
             )
             ->executeQuery();
@@ -97,7 +98,7 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
                 ->where(
                     $queryBuilder->expr()->eq(
                         'uid',
-                        $queryBuilder->createNamedParameter($record['uid'], \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($record['uid'], ParameterType::INTEGER)
                     )
                 )
                 ->set('layout', 0, false)

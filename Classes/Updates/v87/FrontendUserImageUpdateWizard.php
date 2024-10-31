@@ -13,6 +13,8 @@ namespace TYPO3\CMS\v87\Install\Updates;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use Doctrine\DBAL\ParameterType;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Core\Environment;
@@ -196,7 +198,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                     $queryBuilder->expr()->isNotNull($this->fieldToMigrate),
                     $queryBuilder->expr()->neq(
                         $this->fieldToMigrate,
-                        $queryBuilder->createNamedParameter('', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('')
                     ),
                     $queryBuilder->expr()->comparison(
                         'CAST(CAST(' . $queryBuilder->quoteIdentifier($this->fieldToMigrate) . ' AS DECIMAL) AS CHAR)',
@@ -255,11 +257,11 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
                 $existingFileRecord = $queryBuilder->select('uid')->from('sys_file')->where(
                     $queryBuilder->expr()->eq(
                         'sha1',
-                        $queryBuilder->createNamedParameter($fileSha1, \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter($fileSha1)
                     ),
                     $queryBuilder->expr()->eq(
                         'storage',
-                        $queryBuilder->createNamedParameter($storageUid, \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($storageUid, ParameterType::INTEGER)
                     )
                 )->executeQuery()->fetchAssociative();
 
@@ -320,7 +322,7 @@ class FrontendUserImageUpdateWizard implements UpgradeWizardInterface, LoggerAwa
             $queryBuilder->update($this->table)->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($row['uid'], \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($row['uid'], ParameterType::INTEGER)
                 )
             )->set($this->fieldToMigrate, $i)->executeStatement();
         } else {

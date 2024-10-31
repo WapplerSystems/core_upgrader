@@ -14,6 +14,8 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -49,6 +51,7 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
      * Checks if an update is needed
      *
      * @return bool Whether an update is needed (TRUE) or not (FALSE)
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
@@ -58,8 +61,8 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->and(
-                    $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('textmedia', \PDO::PARAM_STR)),
-                    $queryBuilder->expr()->gt('media', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
+                    $queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('textmedia')),
+                    $queryBuilder->expr()->gt('media', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
                 )
             )
             ->executeQuery()
@@ -91,9 +94,9 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
             ->where(
                 $updateQueryBuilder->expr()->and(
                     $updateQueryBuilder->expr()->eq(
-                        'tt_content.CType', $updateQueryBuilder->createNamedParameter('textmedia', \PDO::PARAM_STR)
+                        'tt_content.CType', $updateQueryBuilder->createNamedParameter('textmedia')
                     ),
-                    $updateQueryBuilder->expr()->gt('media', $updateQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
+                    $updateQueryBuilder->expr()->gt('media', $updateQueryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
                 )
             )->set('tt_content.assets', 'tt_content.media', false)
             ->set('sys_file_reference.fieldname', 'assets')

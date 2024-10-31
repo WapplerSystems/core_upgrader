@@ -168,7 +168,7 @@ class ImageCropUpdater implements RowUpdaterInterface
                 ->where(
                     $queryBuilder->expr()->like(
                         $fieldName,
-                        $queryBuilder->createNamedParameter('{"x":%', \PDO::PARAM_STR)
+                        $queryBuilder->createNamedParameter('{"x":%')
                     )
                 );
             if ((int)$query->executeQuery()->fetchOne() > 0) {

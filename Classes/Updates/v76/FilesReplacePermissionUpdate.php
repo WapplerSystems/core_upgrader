@@ -14,6 +14,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -58,8 +59,8 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
             ->from('be_users')
             ->where(
                 $queryBuilder->expr()->and(
-                    $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%', \PDO::PARAM_STR)),
-                    $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
+                    $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%')),
+                    $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%')),
                 )
             )
             ->executeQuery()
@@ -76,8 +77,8 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                 ->from('be_groups')
                 ->where(
                     $queryBuilder->expr()->and(
-                        $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%', \PDO::PARAM_STR)),
-                        $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
+                        $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%')),
+                        $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%')),
                     )
                 )
                 ->executeQuery()
@@ -118,8 +119,8 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                 ->from($table)
                 ->where(
                     $queryBuilder->expr()->and(
-                        $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%', \PDO::PARAM_STR)),
-                        $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%', \PDO::PARAM_STR)),
+                        $queryBuilder->expr()->like('file_permissions', $queryBuilder->createNamedParameter('%writeFile%')),
+                        $queryBuilder->expr()->notLike('file_permissions', $queryBuilder->createNamedParameter('%replaceFile%')),
                     )
                 )
                 ->executeQuery();
@@ -129,7 +130,7 @@ class FilesReplacePermissionUpdate implements UpgradeWizardInterface
                     ->where(
                         $updateQueryBuilder->expr()->eq(
                             'uid',
-                            $updateQueryBuilder->createNamedParameter((int)$singleRecord['uid'], \PDO::PARAM_INT)
+                            $updateQueryBuilder->createNamedParameter((int)$singleRecord['uid'], ParameterType::INTEGER)
                         )
                     )->set('file_permissions', $singleRecord['file_permissions'] . ',replaceFile')
                     ->executeStatement();

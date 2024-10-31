@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -164,7 +165,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
                         ->select('pid')
                         ->from('pages')
                         ->where(
-                            $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($record['t3ver_oid'], \PDO::PARAM_INT))
+                            $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($record['t3ver_oid'], ParameterType::INTEGER))
                         )->executeQuery()->fetchAssociative();
                     $pid = (int)$liveVersion['pid'];
                 }

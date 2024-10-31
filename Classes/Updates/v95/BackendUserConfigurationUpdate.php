@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace TYPO3\CMS\v95\Install\Updates;
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -147,6 +148,6 @@ class BackendUserConfigurationUpdate implements UpgradeWizardInterface
     private function updateBackendUser(int $userId, array $userConfig): void
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('be_users');
-        $connection->update('be_users', ['uc' => serialize($userConfig)], ['uid' => $userId], [\PDO::PARAM_LOB, \PDO::PARAM_INT]);
+        $connection->update('be_users', ['uc' => serialize($userConfig)], ['uid' => $userId], [ParameterType::LARGE_OBJECT, ParameterType::INTEGER]);
     }
 }

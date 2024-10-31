@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -138,7 +140,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
             ->from('pages_language_overlay')
             ->executeQuery();
         $pagesConnection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('pages');
-        $pagesColumns = $pagesConnection->createSchemaManager()->listTableDetails('pages')->getColumns();
+        $pagesColumns = $pagesConnection->createSchemaManager()->introspectTable('pages')->getColumns();
         $pagesColumnTypes = [];
         foreach ($pagesColumns as $pageColumn) {
             $pagesColumnTypes[$pageColumn->getName()] = $pageColumn->getType()->getBindingType();
@@ -202,7 +204,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                         ->where(
                             $translatedPagesQueryBuilder->expr()->gt(
                                 'l10n_parent',
-                                $translatedPagesQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                                $translatedPagesQueryBuilder->createNamedParameter(0, ParameterType::INTEGER)
                             )
                         )
                         ->executeQuery();
@@ -216,11 +218,11 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                             ->where(
                                 $foreignTableQueryBuilder->expr()->eq(
                                     $foreignField,
-                                    $foreignTableQueryBuilder->createNamedParameter($translatedPageRow['legacy_overlay_uid'], \PDO::PARAM_INT)
+                                    $foreignTableQueryBuilder->createNamedParameter($translatedPageRow['legacy_overlay_uid'], ParameterType::INTEGER)
                                 ),
                                 $foreignTableQueryBuilder->expr()->eq(
                                     $foreignTableField,
-                                    $foreignTableQueryBuilder->createNamedParameter('pages_language_overlay', \PDO::PARAM_STR)
+                                    $foreignTableQueryBuilder->createNamedParameter('pages_language_overlay')
                                 )
                             )
                             ->executeStatement();
@@ -244,7 +246,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
             ->where(
                 $translatedPagesQueryBuilder->expr()->gt(
                     'l10n_parent',
-                    $translatedPagesQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                    $translatedPagesQueryBuilder->createNamedParameter(0, ParameterType::INTEGER)
                 )
             )
             ->executeQuery();
@@ -258,11 +260,11 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
                 ->where(
                     $historyTableQueryBuilder->expr()->eq(
                         'recuid',
-                        $historyTableQueryBuilder->createNamedParameter($translatedPageRow['legacy_overlay_uid'], \PDO::PARAM_INT)
+                        $historyTableQueryBuilder->createNamedParameter($translatedPageRow['legacy_overlay_uid'], ParameterType::INTEGER)
                     ),
                     $historyTableQueryBuilder->expr()->eq(
                         'tablename',
-                        $historyTableQueryBuilder->createNamedParameter('pages_language_overlay', \PDO::PARAM_STR)
+                        $historyTableQueryBuilder->createNamedParameter('pages_language_overlay')
                     )
                 )
                 ->executeStatement();
@@ -285,7 +287,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($pageId, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()
@@ -299,6 +301,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
      *
      * @param int $overlayUid
      * @return bool
+     * @throws Exception
      */
     protected function isOverlayRecordMigratedAlready(int $overlayUid): bool
     {
@@ -310,7 +313,7 @@ class MigratePagesLanguageOverlayUpdate implements UpgradeWizardInterface, Chatt
             ->where(
                 $queryBuilder->expr()->eq(
                     'legacy_overlay_uid',
-                    $queryBuilder->createNamedParameter($overlayUid, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($overlayUid, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()

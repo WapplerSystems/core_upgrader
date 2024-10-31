@@ -15,6 +15,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Resource\Exception;
 use TYPO3\CMS\Core\Resource\File;
@@ -58,8 +59,8 @@ class FileReferenceUpdate implements UpgradeWizardInterface
         return (bool)$queryBuilder->count('hash')
             ->from('sys_refindex')
             ->where(
-                $queryBuilder->expr()->eq('ref_table', $queryBuilder->createNamedParameter('_FILE', \PDO::PARAM_STR)),
-                $queryBuilder->expr()->eq('softref_key', $queryBuilder->createNamedParameter('typolink_tag', \PDO::PARAM_STR)),
+                $queryBuilder->expr()->eq('ref_table', $queryBuilder->createNamedParameter('_FILE')),
+                $queryBuilder->expr()->eq('softref_key', $queryBuilder->createNamedParameter('typolink_tag')),
             )
             ->executeQuery()
             ->fetchOne();
@@ -87,9 +88,9 @@ class FileReferenceUpdate implements UpgradeWizardInterface
         $statement = $queryBuilder->select('*')
             ->from('sys_refindex')
             ->where(
-                $queryBuilder->expr()->eq('ref_table', $queryBuilder->createNamedParameter('_FILE', \PDO::PARAM_STR)),
-                $queryBuilder->expr()->eq('softref_key', $queryBuilder->createNamedParameter('typolink_tag', \PDO::PARAM_STR)),
-                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('ref_table', $queryBuilder->createNamedParameter('_FILE')),
+                $queryBuilder->expr()->eq('softref_key', $queryBuilder->createNamedParameter('typolink_tag')),
+                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER))
             )
             ->executeQuery();
         while ($record = $statement->fetchAssociative()) {
@@ -112,7 +113,7 @@ class FileReferenceUpdate implements UpgradeWizardInterface
                 ->where(
                     $updateQueryBuilder->expr()->eq(
                         'hash',
-                        $updateQueryBuilder->createNamedParameter($record['hash'], \PDO::PARAM_STR)
+                        $updateQueryBuilder->createNamedParameter($record['hash'])
                     )
                 );
 

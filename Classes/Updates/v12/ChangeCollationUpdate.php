@@ -6,8 +6,12 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v12\Install\Updates;
 
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\TextType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -59,7 +63,7 @@ final class ChangeCollationUpdate implements UpgradeWizardInterface
         }
 
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName('Default');
-        $schemaManager = $connection->getSchemaManager();
+        $schemaManager = $connection->createSchemaManager();
 
         /** @var Table[] $tables */
         $tables = $schemaManager->listTables();
@@ -76,7 +80,7 @@ final class ChangeCollationUpdate implements UpgradeWizardInterface
             // Check each column collation
             foreach ($table->getColumns() as $column) {
 
-                if ($column->getType()->getName() === 'string' || $column->getType()->getName() === 'text') {
+                if ($column->getType() instanceof StringType || $column->getType() instanceof TextType) {
                     $columnCollation = $this->getColumnCollation($connection, $schemaManager, $tableName, $column->getName());
                     if ($columnCollation !== $this->collate) {
                         return true;
@@ -97,7 +101,7 @@ final class ChangeCollationUpdate implements UpgradeWizardInterface
     public function executeUpdate(): bool
     {
         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName('Default');
-        $schemaManager = $connection->getSchemaManager();
+        $schemaManager = $connection->createSchemaManager();
 
         /** @var Table[] $tables */
         $tables = $schemaManager->listTables();
@@ -152,9 +156,11 @@ final class ChangeCollationUpdate implements UpgradeWizardInterface
     /**
      * Get the collation of a table
      *
+     * @param Connection $connection
      * @param AbstractSchemaManager $schemaManager
      * @param string $tableName
      * @return string|null
+     * @throws Exception
      */
     protected function getTableCollation(Connection $connection, AbstractSchemaManager $schemaManager, string $tableName): ?string
     {
@@ -166,10 +172,12 @@ final class ChangeCollationUpdate implements UpgradeWizardInterface
     /**
      * Get the collation of a column
      *
+     * @param Connection $connection
      * @param AbstractSchemaManager $schemaManager
      * @param string $tableName
      * @param string $columnName
      * @return string|null
+     * @throws Exception
      */
     protected function getColumnCollation(Connection $connection, AbstractSchemaManager $schemaManager, string $tableName, string $columnName): ?string
     {
@@ -182,10 +190,12 @@ final class ChangeCollationUpdate implements UpgradeWizardInterface
     /**
      * Get the SQL type of a column
      *
-     * @param \Doctrine\DBAL\Schema\Column $column
+     * @param Connection $connection
+     * @param Column $column
      * @return string
+     * @throws Exception
      */
-    protected function getColumnType(Connection $connection, \Doctrine\DBAL\Schema\Column $column): string
+    protected function getColumnType(Connection $connection, Column $column): string
     {
         return $column->getType()->getSQLDeclaration($column->toArray(), $connection->getDatabasePlatform());
     }

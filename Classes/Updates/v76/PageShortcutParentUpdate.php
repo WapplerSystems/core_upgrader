@@ -14,6 +14,8 @@ namespace TYPO3\CMS\v76\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -52,6 +54,7 @@ class PageShortcutParentUpdate implements UpgradeWizardInterface
      * Checks if an update is needed
      *
      * @return bool Whether an update is needed (TRUE) or not (FALSE)
+     * @throws Exception
      */
     public function updateNecessary(): bool
     {
@@ -60,8 +63,8 @@ class PageShortcutParentUpdate implements UpgradeWizardInterface
         return (bool)$queryBuilder->count('uid')
             ->from('pages')
             ->where(
-                $queryBuilder->expr()->neq('shortcut', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('shortcut_mode', $queryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE, \PDO::PARAM_STR))
+                $queryBuilder->expr()->neq('shortcut', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                $queryBuilder->expr()->eq('shortcut_mode', $queryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE))
             )
             ->executeQuery()
             ->fetchOne();
@@ -87,8 +90,8 @@ class PageShortcutParentUpdate implements UpgradeWizardInterface
         $updateQueryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
         $updateQueryBuilder->update('pages')
             ->where(
-                $updateQueryBuilder->expr()->neq('shortcut', $updateQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
-                $updateQueryBuilder->expr()->eq('shortcut_mode', $updateQueryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE, \PDO::PARAM_STR))
+                $updateQueryBuilder->expr()->neq('shortcut', $updateQueryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                $updateQueryBuilder->expr()->eq('shortcut_mode', $updateQueryBuilder->createNamedParameter(PageRepository::SHORTCUT_MODE_PARENT_PAGE))
             )->set('shortcut', 0)->executeStatement();
 
         return true;

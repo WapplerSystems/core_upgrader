@@ -15,6 +15,8 @@ namespace TYPO3\CMS\v87\Install\Updates\RowUpdater;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -234,11 +236,11 @@ class L10nModeUpdater implements RowUpdaterInterface
         $predicates = [
             $queryBuilder->expr()->gt(
                 $tableDefinition['ctrl']['languageField'],
-                $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)
             ),
             $queryBuilder->expr()->gt(
                 $parentFieldName,
-                $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)
             )
         ];
 
@@ -252,21 +254,21 @@ class L10nModeUpdater implements RowUpdaterInterface
                     't3ver_state',
                     $queryBuilder->createNamedParameter(
                         self::NEW_PLACEHOLDER_VERSION,
-                        \PDO::PARAM_INT
+                        ParameterType::INTEGER
                     )
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_state',
                     $queryBuilder->createNamedParameter(
                         VersionState::DEFAULT_STATE,
-                        \PDO::PARAM_INT
+                        ParameterType::INTEGER
                     )
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_state',
                     $queryBuilder->createNamedParameter(
                         VersionState::MOVE_POINTER,
-                        \PDO::PARAM_INT
+                        ParameterType::INTEGER
                     )
                 )
             );
@@ -297,6 +299,7 @@ class L10nModeUpdater implements RowUpdaterInterface
      * @param string $tableName
      * @param int $id
      * @return array
+     * @throws Exception
      */
     protected function getRow(string $tableName, int $id)
     {
@@ -310,7 +313,7 @@ class L10nModeUpdater implements RowUpdaterInterface
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($id, ParameterType::INTEGER)
                 )
             )
             ->executeQuery();

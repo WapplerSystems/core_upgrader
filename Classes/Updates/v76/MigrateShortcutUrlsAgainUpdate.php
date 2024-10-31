@@ -15,6 +15,7 @@ namespace TYPO3\CMS\v76\Install\Updates;
  */
 
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -108,7 +109,7 @@ class MigrateShortcutUrlsAgainUpdate implements UpgradeWizardInterface
                 ->where(
                     $updateQueryBuilder->expr()->eq(
                         'uid',
-                        $updateQueryBuilder->createNamedParameter((int)$record['uid'], \PDO::PARAM_INT)
+                        $updateQueryBuilder->createNamedParameter((int)$record['uid'], ParameterType::INTEGER)
                     )
                 )->set('url', $encodedUrl)->executeStatement();
 

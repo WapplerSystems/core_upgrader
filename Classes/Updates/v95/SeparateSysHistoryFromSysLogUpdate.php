@@ -19,6 +19,7 @@ namespace TYPO3\CMS\v95\Install\Updates;
 
 use Doctrine\DBAL\ConnectionException;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\History\RecordHistoryStore;
@@ -296,10 +297,10 @@ class SeparateSysHistoryFromSysLogUpdate implements UpgradeWizardInterface, Repe
             $result = $logQueryBuilder->select('uid', 'userid', 'action', 'tstamp', 'log_data', 'tablename', 'recuid')
                 ->from('sys_log')
                 ->where(
-                    $logQueryBuilder->expr()->eq('type', $logQueryBuilder->createNamedParameter(1, \PDO::PARAM_INT)),
+                    $logQueryBuilder->expr()->eq('type', $logQueryBuilder->createNamedParameter(1, ParameterType::INTEGER)),
                     $logQueryBuilder->expr()->or(
-                        $logQueryBuilder->expr()->eq('action', $logQueryBuilder->createNamedParameter(1, \PDO::PARAM_INT)),
-                        $logQueryBuilder->expr()->eq('action', $logQueryBuilder->createNamedParameter(3, \PDO::PARAM_INT))
+                        $logQueryBuilder->expr()->eq('action', $logQueryBuilder->createNamedParameter(1, ParameterType::INTEGER)),
+                        $logQueryBuilder->expr()->eq('action', $logQueryBuilder->createNamedParameter(3, ParameterType::INTEGER))
                     )
                 )
                 ->andWhere(

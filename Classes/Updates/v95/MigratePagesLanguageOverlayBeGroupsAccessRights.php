@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -94,7 +95,7 @@ class MigratePagesLanguageOverlayBeGroupsAccessRights implements UpgradeWizardIn
                     ->where(
                         $updateBeGroupsQueryBuilder->expr()->eq(
                             'uid',
-                            $updateBeGroupsQueryBuilder->createNamedParameter($beGroupsRow['uid'], \PDO::PARAM_INT)
+                            $updateBeGroupsQueryBuilder->createNamedParameter($beGroupsRow['uid'], ParameterType::INTEGER)
                         )
                     )
                     ->executeStatement();

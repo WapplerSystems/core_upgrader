@@ -15,6 +15,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -117,7 +118,7 @@ class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, Cha
                 ->where(
                     $queryBuilder->expr()->eq(
                         'uid',
-                        $queryBuilder->createNamedParameter($userUid, \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($userUid, ParameterType::INTEGER)
                     )
                 )
                 // "false" is set as third parameter to have the final
@@ -155,7 +156,7 @@ class CommandLineBackendUserRemovalUpdate implements UpgradeWizardInterface, Cha
                 'LOWER(username) LIKE \'_cli_%\'',
                 $queryBuilder->expr()->neq(
                     'username',
-                    $queryBuilder->createNamedParameter('_cli_', \PDO::PARAM_STR)
+                    $queryBuilder->createNamedParameter('_cli_')
                 )
             )
             ->executeQuery();

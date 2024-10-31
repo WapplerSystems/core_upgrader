@@ -14,6 +14,7 @@ namespace TYPO3\CMS\v87\Install\Updates;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
@@ -103,7 +104,7 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
                 ->where(
                     $queryBuilder->expr()->eq(
                         'uid',
-                        $queryBuilder->createNamedParameter($record['uid'], \PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($record['uid'], ParameterType::INTEGER)
                     )
                 )
                 ->set('section_frame', 0, false)
