@@ -24,5 +24,8 @@ services:
   TYPO3\CMS\v104\Install\Updates\:
     resource: '../Classes/Updates/v104/*'
 
+  TYPO3\CMS\v11\Install\Updates\:
+    resource: '../Classes/Updates/v11/*'
+
   TYPO3\CMS\v12\Install\Updates\:
     resource: '../Classes/Updates/v12/*'
