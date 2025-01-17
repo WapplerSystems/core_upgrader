@@ -45,8 +45,8 @@ class DatabaseRowsUpdateWizard extends \TYPO3\CMS\Install\Updates\DatabaseRowsUp
      * @var array Single classes that may update rows
      */
     protected $rowUpdater = [
-        L10nModeUpdater::class,
-        ImageCropUpdater::class,
+        //L10nModeUpdater::class,
+        //ImageCropUpdater::class,
         RteLinkSyntaxUpdater::class,
     ];
 
