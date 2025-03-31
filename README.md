@@ -2,16 +2,16 @@
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/wapplersystems/core-upgrader.svg)](https://packagist.org/packages/ichhabrecht/core-upgrader)
 
-Run upgrade wizards for multiple TYPO3 versions (to 12.4) at once.
+Run upgrade wizards for multiple TYPO3 versions (to 13.4) at once.
 
 ## Features
 
-This extension allows to upgrade the TYPO3 core from v7.6 to v10.4 with this extension and the rest by the v12 core in one step.
+This extension allows to upgrade the TYPO3 core from v7.6 to v11.5 with this extension and the rest by the v13 core in one step.
 
 Differences from the original Core Upgrade Wizards:
 
 * The Text/Textpic/Image to Textmedia Wizard has been split into optional wizards
-* Some obsolete wizards were removed, because their result cannot be used in version 12 already.
+* Some obsolete wizards were removed, because their result cannot be used in version 13 already.
 
 ## Installation
 
