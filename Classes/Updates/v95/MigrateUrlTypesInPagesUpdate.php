@@ -17,10 +17,13 @@ declare(strict_types=1);
 
 namespace TYPO3\CMS\v95\Install\Updates;
 
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\ParameterType;
+use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
+use TYPO3\CMS\Install\Updates\ChattyInterface;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -29,7 +32,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * @internal This class is only meant to be used within EXT:install and is not part of the TYPO3 Core API.
  */
 #[UpgradeWizard('pagesUrltypeField')]
-class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
+class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface, ChattyInterface
 {
     /**
      * @var string[]
@@ -40,6 +43,11 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
      * @var string[]
      */
     private $urltypes = ['', 'http://', 'ftp://', 'mailto:', 'https://'];
+
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
 
 
     /**
@@ -123,21 +131,28 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
                 )
                 ->executeQuery();
 
-            while ($row = $statement->fetchAssociative()) {
-                $url = $this->urltypes[(int)$row['urltype']] . $row['url'];
-                $updateQueryBuilder = $connection->createQueryBuilder();
-                $updateQueryBuilder
-                    ->update($databaseTable)
-                    ->where(
-                        $updateQueryBuilder->expr()->eq(
-                            'uid',
-                            $updateQueryBuilder->createNamedParameter($row['uid'], ParameterType::INTEGER)
-                        )
-                    )
-                    ->set('url', $updateQueryBuilder->createNamedParameter($url), false)
-                    ->set('urltype', 0);
-                $updateQueryBuilder->executeStatement();
-            }
+
+                while ($row = $statement->fetchAssociative()) {
+                    try{
+                        $url = $this->urltypes[(int)$row['urltype']] . $row['url'];
+                        $updateQueryBuilder = $connection->createQueryBuilder();
+                        $updateQueryBuilder
+                            ->update($databaseTable)
+                            ->where(
+                                $updateQueryBuilder->expr()->eq(
+                                    'uid',
+                                    $updateQueryBuilder->createNamedParameter($row['uid'], ParameterType::INTEGER)
+                                )
+                            )
+                            ->set('url', $updateQueryBuilder->createNamedParameter($url), false)
+                            ->set('urltype', 0);
+                        $updateQueryBuilder->executeStatement();
+                    }catch (DriverException $exception){
+                        $this->output->writeln($exception->getMessage());
+                        $this->output->writeln('Problematic URL: '.$url);
+                        $this->output->writeln('Found on page: '. $row['uid']);
+                    }
+                }
         }
         return true;
     }
@@ -159,5 +174,10 @@ class MigrateUrlTypesInPagesUpdate implements UpgradeWizardInterface
             }
         }
         return count($this->databaseTables) > 0;
+    }
+
+    public function setOutput(OutputInterface $output): void
+    {
+        $this->output = $output;
     }
 }
