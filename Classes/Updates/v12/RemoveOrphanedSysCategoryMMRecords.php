@@ -175,7 +175,7 @@ final class RemoveOrphanedSysCategoryMMRecords implements UpgradeWizardInterface
     }
 
 
-    private function doUpdate($limit) {
+    private function doUpdate($limit): void {
 
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_category_record_mm');
