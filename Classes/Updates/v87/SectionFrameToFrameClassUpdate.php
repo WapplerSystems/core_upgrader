@@ -107,7 +107,7 @@ class SectionFrameToFrameClassUpdate implements UpgradeWizardInterface
                         $queryBuilder->createNamedParameter($record['uid'], ParameterType::INTEGER)
                     )
                 )
-                ->set('section_frame', 0, false)
+                ->set('section_frame', '0', false)
                 ->set('frame_class', $this->mapSectionFrame($record['section_frame']));
             $queryBuilder->executeStatement();
         }
