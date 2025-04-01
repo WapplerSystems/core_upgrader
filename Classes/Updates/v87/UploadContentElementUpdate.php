@@ -101,7 +101,7 @@ class UploadContentElementUpdate implements UpgradeWizardInterface
                         $queryBuilder->createNamedParameter($record['uid'], ParameterType::INTEGER)
                     )
                 )
-                ->set('layout', 0, false)
+                ->set('layout', '0', false)
                 ->set('uploads_type', $record['layout'])
                 ->executeStatement();
         }
