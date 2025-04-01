@@ -198,7 +198,7 @@ final class RemoveOrphanedSysFileReferences implements UpgradeWizardInterface
                     ->where(
                         $queryBuilder->expr()->eq(
                             'tablenames',
-                            $foreignTablename
+                            $queryBuilder->createNamedParameter($foreignTablename)
                         )
                     )
                     ->executeStatement();
