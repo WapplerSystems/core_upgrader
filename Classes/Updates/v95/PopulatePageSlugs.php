@@ -278,7 +278,7 @@ class PopulatePageSlugs implements UpgradeWizardInterface
         $fieldConfig = $GLOBALS['TCA'][$this->table]['columns'][$this->fieldName]['config'];
 
         // Add the EXT:realurl specific field to generatorOptions
-        $fieldConfig['generatorOptions']['fields'] = ['tx_realurl_pathsegment,title'];
+        $fieldConfig['generatorOptions']['fields'] = ['tx_realurl_pathsegment,nav_title,title'];
 
         return $fieldConfig;
     }
