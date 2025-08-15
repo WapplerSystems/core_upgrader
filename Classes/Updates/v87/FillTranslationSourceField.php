@@ -85,11 +85,11 @@ class FillTranslationSourceField implements UpgradeWizardInterface
             ->getConnectionForTable('tt_content');
         $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->getRestrictions()->removeAll();
-        $queryBuilder->update('tt_content', 't')
-            ->set('t.l10n_source', 't.l18n_parent', false)
+        $queryBuilder->update('tt_content')
+            ->set('l10n_source', 'l18n_parent', false)
             ->where($queryBuilder->expr()->and(
-                $queryBuilder->expr()->gt('t.l18n_parent', $queryBuilder->createNamedParameter(0)),
-                $queryBuilder->expr()->eq('t.l10n_source', $queryBuilder->createNamedParameter(0))
+                $queryBuilder->expr()->gt('l18n_parent', $queryBuilder->createNamedParameter(0)),
+                $queryBuilder->expr()->eq('l10n_source', $queryBuilder->createNamedParameter(0))
             ))
             ->executeStatement();
         return true;
