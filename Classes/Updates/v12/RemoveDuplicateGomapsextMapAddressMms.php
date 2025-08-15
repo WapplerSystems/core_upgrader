@@ -57,7 +57,7 @@ final class RemoveDuplicateGomapsextMapAddressMms implements UpgradeWizardInterf
         $statement = $queryBuilder->count('*')
             ->addSelect('uid_local', 'uid_foreign', 'sorting', 'sorting_foreign')
             ->from('tx_gomapsext_map_address_mm')
-            ->groupBy('uid_local', 'uid_foreign')
+            ->groupBy('uid_local', 'uid_foreign', 'sorting', 'sorting_foreign')
             ->having('COUNT(*) > 1')
             ->executeQuery();
 
@@ -112,7 +112,7 @@ final class RemoveDuplicateGomapsextMapAddressMms implements UpgradeWizardInterf
         $statement = $queryBuilder->count('*')
             ->addSelect('uid_local', 'uid_foreign', 'sorting', 'sorting_foreign')
             ->from('tx_gomapsext_map_address_mm')
-            ->groupBy('uid_local', 'uid_foreign')
+            ->groupBy('uid_local', 'uid_foreign', 'sorting', 'sorting_foreign')
             ->having('COUNT(*) > 1')
             ->executeQuery();
         return $statement->rowCount() > 0;

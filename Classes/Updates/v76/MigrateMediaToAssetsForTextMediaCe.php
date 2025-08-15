@@ -19,6 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 
 /**
  * Migrate CTypes 'textmedia' to use 'assets' field instead of 'media'
@@ -81,25 +82,54 @@ class MigrateMediaToAssetsForTextMediaCe implements UpgradeWizardInterface
      *
      * @return bool
      */
-    public function executeUpdate(): bool
-    {
+     public function executeUpdate(): bool
+     {
+         $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('sys_file_reference');
+         $queryBuilder = $connection->createQueryBuilder();
+         $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+         $result = $queryBuilder
+             ->select('uid_local', 'uid_foreign')
+             ->from('sys_file_reference')
+             ->leftJoin(
+                 'sys_file_reference','tt_content','tt_content',
+                 $queryBuilder->expr()->eq('sys_file_reference.uid_foreign', $queryBuilder->quoteIdentifier('tt_content.uid'))
+             )
+             ->where(
+                 $queryBuilder->expr()->and(
+                     $queryBuilder->expr()->eq(
+                         'tt_content.CType', $queryBuilder->createNamedParameter('textmedia', \PDO::PARAM_STR)
+                     ),
+                     $queryBuilder->expr()->gt('tt_content.media', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
+                     $queryBuilder->expr()->eq('sys_file_reference.tablenames', $queryBuilder->createNamedParameter('tt_content', \PDO::PARAM_STR)),
+                 )
+             )
+             ->executeQuery();
 
-        $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('sys_file_reference');
-        $updateQueryBuilder = $connection->createQueryBuilder();
-        $updateQueryBuilder->update('sys_file_reference')
-            ->leftJoin('sys_file_reference','tt_content','tt_content')
-            ->where(
-                $updateQueryBuilder->expr()->and(
-                    $updateQueryBuilder->expr()->eq(
-                        'tt_content.CType', $updateQueryBuilder->createNamedParameter('textmedia', \PDO::PARAM_STR)
-                    ),
-                    $updateQueryBuilder->expr()->gt('media', $updateQueryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
-                )
-            )->set('tt_content.assets', 'tt_content.media', false)
-            ->set('sys_file_reference.fieldname', 'assets')
-            ->set('tt_content.media', 0)
-        ->executeStatement();
+         $ttContentUids = [];
+         $updateQueryBuilder = $connection->createQueryBuilder();
+         while ($row = $result->fetchAssociative()) {
+             $ttContentUids[] = $row['uid_foreign'];
+             $updateQueryBuilder->update('sys_file_reference')
+                 ->set('fieldname', 'assets')
+                 ->where(
+                     $updateQueryBuilder->expr()->and(
+                         $updateQueryBuilder->expr()->eq('tablenames', $updateQueryBuilder->createNamedParameter('tt_content', \PDO::PARAM_STR)),
+                         $updateQueryBuilder->expr()->eq('uid_local', $updateQueryBuilder->createNamedParameter($row['uid_local'], \PDO::PARAM_INT)),
+                         $updateQueryBuilder->expr()->eq('uid_foreign', $updateQueryBuilder->createNamedParameter($row['uid_foreign'], \PDO::PARAM_INT)),
+                     )
+                 )
+                 ->executeStatement();
+         }
 
-        return true;
-    }
+         if (!empty($ttContentUids)) {
+           $updateQueryBuilder->resetQueryParts();
+           $updateQueryBuilder->update('tt_content')
+               ->set('assets', 'media', false)
+               ->set('media', 0)
+               ->where($updateQueryBuilder->expr()->in('uid', $ttContentUids))
+               ->executeStatement();
+         }
+
+         return true;
+     }
 }

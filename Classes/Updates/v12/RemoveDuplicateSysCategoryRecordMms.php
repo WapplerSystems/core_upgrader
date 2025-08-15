@@ -56,7 +56,7 @@ final class RemoveDuplicateSysCategoryRecordMms implements UpgradeWizardInterfac
         $statement = $queryBuilder->count('*')
             ->addSelect('uid_local', 'uid_foreign', 'tablenames', 'fieldname', 'sorting', 'sorting_foreign')
             ->from('sys_category_record_mm')
-            ->groupBy('uid_local', 'uid_foreign', 'tablenames', 'fieldname')
+            ->groupBy('uid_local', 'uid_foreign', 'tablenames', 'fieldname', 'sorting', 'sorting_foreign')
             ->having('COUNT(*) > 1')
             ->executeQuery();
 
@@ -117,7 +117,7 @@ final class RemoveDuplicateSysCategoryRecordMms implements UpgradeWizardInterfac
         $statement = $queryBuilder->count('*')
             ->addSelect('uid_local', 'uid_foreign', 'tablenames', 'fieldname', 'sorting', 'sorting_foreign')
             ->from('sys_category_record_mm')
-            ->groupBy('uid_local', 'uid_foreign', 'tablenames', 'fieldname')
+            ->groupBy('uid_local', 'uid_foreign', 'tablenames', 'fieldname', 'sorting', 'sorting_foreign')
             ->having('COUNT(*) > 1')
             ->executeQuery();
         return $statement->rowCount() > 0;
