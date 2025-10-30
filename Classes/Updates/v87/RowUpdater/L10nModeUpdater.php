@@ -186,6 +186,7 @@ class L10nModeUpdater implements RowUpdaterInterface
      * @param string $tableName Table name
      * @return array Payload information for this table
      * @throws \RuntimeException
+     * @throws Exception
      */
     protected function getL10nModePayloadForTable(string $tableName): array
     {
@@ -260,14 +261,14 @@ class L10nModeUpdater implements RowUpdaterInterface
                 $queryBuilder->expr()->eq(
                     't3ver_state',
                     $queryBuilder->createNamedParameter(
-                        VersionState::DEFAULT_STATE,
+                        VersionState::DEFAULT_STATE->value,
                         ParameterType::INTEGER
                     )
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_state',
                     $queryBuilder->createNamedParameter(
-                        VersionState::MOVE_POINTER,
+                        VersionState::MOVE_POINTER->value,
                         ParameterType::INTEGER
                     )
                 )

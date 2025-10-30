@@ -89,7 +89,7 @@ class WorkspaceMovePlaceholderRemovalMigration implements RowUpdaterInterface, L
                     $updatedFieldsForMovePointer,
                     [
                         't3ver_oid' => $liveUid,
-                        't3ver_state' => VersionState::MOVE_POINTER,
+                        't3ver_state' => VersionState::MOVE_POINTER->value,
                         't3ver_wsid' => $workspaceId,
                     ]
                 );

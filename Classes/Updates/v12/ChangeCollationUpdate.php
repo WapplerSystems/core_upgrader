@@ -24,8 +24,8 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 final class ChangeCollationUpdate implements UpgradeWizardInterface
 {
 
-    protected $charset;
-    protected $collate;
+    protected string $charset;
+    protected string $collate;
 
     public function __construct()
     {
