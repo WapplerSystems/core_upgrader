@@ -10,7 +10,7 @@
  * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
 
-$EM_CONF['core_upgrader2'] = [
+$EM_CONF[$_EXTKEY] = [
     'title' => 'Core upgrader',
     'description' => 'Run upgrade wizards for multiple TYPO3 versions at once and clean up the system',
     'category' => 'cli',
@@ -21,7 +21,7 @@ $EM_CONF['core_upgrader2'] = [
     'version' => '13.0.1',
     'constraints' => [
         'depends' => [
-            'typo3' => '13.4.0-13.4.99',
+            'typo3' => '14.0.0-14.4.99',
         ],
     ],
 ];
