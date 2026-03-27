@@ -1,16 +1,8 @@
 {
     "name": "wapplersystems/core-upgrader",
-    "description": "Run upgrade wizards for multiple TYPO3 versions at once and clean up the system",
     "type": "typo3-cms-extension",
-    "keywords": [
-        "TYPO3 CMS",
-        "Extension",
-        "Upgrade",
-        "Update",
-        "Wizards",
-        "maintenance",
-        "cleanup"
-    ],
+    "description": "Run upgrade wizards for multiple TYPO3 versions at once and clean up the system",
+    "keywords": ["TYPO3 CMS", "Extension", "Upgrade", "Update", "Wizards", "maintenance", "cleanup"],
     "homepage": "https://github.com/WapplerSystems/core_upgrader",
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -25,9 +17,14 @@
             "role": "Developer"
         }
     ],
+    "support": {
+        "source": "https://github.com/WapplerSystems/core_upgrader",
+        "issues": "https://github.com/WapplerSystems/core_upgrader/issues"
+    },
     "require": {
-        "typo3/cms-core": "^14.0.0",
-        "typo3/cms-install": "^14.0.0"
+        "php": "^8.2",
+        "typo3/cms-core": "^14.0",
+        "typo3/cms-install": "^14.0"
     },
     "autoload": {
         "psr-4": {
