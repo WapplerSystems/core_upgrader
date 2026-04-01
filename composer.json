@@ -17,7 +17,8 @@
         {
             "name": "Sven Wappler",
             "email": "typo3@wappler.systems",
-            "role": "Developer"
+            "role": "Developer",
+            "homepage": "https://wappler.systems"
         },
         {
             "name": "Nicole Cordes",
@@ -25,6 +26,10 @@
             "role": "Developer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/WapplerSystems/core_upgrader/issues",
+        "source": "https://github.com/WapplerSystems/core_upgrader"
+    },
     "require": {
         "typo3/cms-core": "^13.4.0",
         "typo3/cms-install": "^13.4.0"
