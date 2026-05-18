@@ -28,21 +28,11 @@ use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
 {
 
-    /**
-     * @return string Title of this updater
-     */
     public function getTitle(): string
     {
         return 'Migrate the workspaces notification settings to the enhanced schema';
     }
 
-    /**
-     * Returns an array of class names of Prerequisite classes
-     * This way a wizard can define dependencies like "database up-to-date" or
-     * "reference index updated"
-     *
-     * @return string[]
-     */
     public function getPrerequisites(): array
     {
         return [
@@ -50,87 +40,73 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
         ];
     }
 
-    /**
-     * @return string Longer description of this updater
-     */
     public function getDescription(): string
     {
         return 'The workspaces notification settings have been extended'
             . ' and need to be migrated to the new definitions. This update wizard'
-            . ' upgrades the accordant settings in the availble workspaces and stages.';
+            . ' upgrades the accordant settings in the available workspaces and stages.';
     }
 
-    /**
-     * Checks if an update is needed
-     *
-     * @return bool Whether an update is needed (TRUE) or not (FALSE)
-     */
-    public function updateNecessary() : bool
+    public function updateNecessary(): bool
     {
         if (!ExtensionManagementUtility::isLoaded('workspaces')) {
             return false;
         }
+        // The legacy `notification_mode` columns were dropped in TYPO3 8.
+        // On any newer installation the migration is implicitly done — bail out.
+        if (!$this->hasLegacyColumn('sys_workspace', 'edit_notification_mode')
+            && !$this->hasLegacyColumn('sys_workspace_stage', 'notification_mode')
+        ) {
+            return false;
+        }
 
+        $workspacesCount = (int)$this->getConnectionPool()
+            ->getQueryBuilderForTable('sys_workspace')
+            ->count('uid')
+            ->from('sys_workspace')
+            ->where('deleted = 0')
+            ->executeQuery()
+            ->fetchOne();
 
-        $workspacesCount = $this->getDatabaseConnection()->exec_SELECTcountRows(
-            'uid',
-            'sys_workspace',
-            'deleted=0'
-        );
+        $stagesCount = (int)$this->getConnectionPool()
+            ->getQueryBuilderForTable('sys_workspace_stage')
+            ->count('uid')
+            ->from('sys_workspace_stage')
+            ->where('deleted = 0')
+            ->executeQuery()
+            ->fetchOne();
 
-        $stagesCount = $this->getDatabaseConnection()->exec_SELECTcountRows(
-            'uid',
-            'sys_workspace_stage',
-            'deleted=0'
-        );
+        return ($workspacesCount + $stagesCount) > 0;
+    }
 
-        if ($workspacesCount + $stagesCount > 0) {
-            $description = 'The workspaces notification settings have been extended'
-                . ' and need to be migrated to the new definitions. This update wizard'
-                . ' upgrades the accordant settings in the availble workspaces and stages.';
+    public function executeUpdate(): bool
+    {
+        if (!$this->updateNecessary()) {
             return true;
         }
 
-        return false;
-    }
-
-    /**
-     * Perform the database updates for workspace records
-     *
-     * @return bool
-     */
-    public function executeUpdate() : bool
-    {
-        $connection = $this->getConnectionPool()->getConnectionForTable('sys_workspace');
-
-        $workspaceRecords = $databaseConnection->exec_SELECTgetRows('*', 'sys_workspace', 'deleted=0');
+        $workspaceConnection = $this->getConnectionPool()->getConnectionForTable('sys_workspace');
+        $workspaceRecords = $workspaceConnection->select(['*'], 'sys_workspace', ['deleted' => 0])->fetchAllAssociative();
         foreach ($workspaceRecords as $workspaceRecord) {
             $update = $this->prepareWorkspaceUpdate($workspaceRecord);
-            if ($update !== null) {
-                $databaseConnection->exec_UPDATEquery('sys_workspace', 'uid=' . (int)$workspaceRecord['uid'], $update);
-                $databaseQueries[] = $databaseConnection->debug_lastBuiltQuery;
+            if ($update !== null && $update !== []) {
+                $workspaceConnection->update('sys_workspace', $update, ['uid' => (int)$workspaceRecord['uid']]);
             }
         }
 
-        $stageRecords = $databaseConnection->exec_SELECTgetRows('*', 'sys_workspace_stage', 'deleted=0');
+        $stageConnection = $this->getConnectionPool()->getConnectionForTable('sys_workspace_stage');
+        $stageRecords = $stageConnection->select(['*'], 'sys_workspace_stage', ['deleted' => 0])->fetchAllAssociative();
         foreach ($stageRecords as $stageRecord) {
             $update = $this->prepareStageUpdate($stageRecord);
-            if ($update !== null) {
-                $databaseConnection->exec_UPDATEquery('sys_workspace_stage', 'uid=' . (int)$stageRecord['uid'], $update);
-                $databaseQueries[] = $databaseConnection->debug_lastBuiltQuery;
+            if ($update !== null && $update !== []) {
+                $stageConnection->update('sys_workspace_stage', $update, ['uid' => (int)$stageRecord['uid']]);
             }
         }
 
         return true;
     }
 
-    /**
-     * Prepares SQL updates for workspace records.
-     *
-     * @param array $workspaceRecord
-     * @return array|NULL
-     */
-    protected function prepareWorkspaceUpdate(array $workspaceRecord)
+    protected function prepareWorkspaceUpdate(array $workspaceRecord): ?array
     {
         if (empty($workspaceRecord['uid'])) {
             return null;
@@ -143,57 +119,34 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
         return $update;
     }
 
-    /**
-     * Prepares SQL update for stage records.
-     *
-     * @param array $stageRecord
-     * @return array|null
-     */
-    protected function prepareStageUpdate(array $stageRecord)
+    protected function prepareStageUpdate(array $stageRecord): ?array
     {
         if (empty($stageRecord['uid'])) {
             return null;
         }
 
-        $update = [];
-        $update = $this->mapSettings($stageRecord, $update);
-        return $update;
+        return $this->mapSettings($stageRecord, [], '', '');
     }
 
-    /**
-     * Maps settings to new meaning.
-     *
-     * @param array $record
-     * @param array $update
-     * @param string $from
-     * @param string $to
-     * @return array
-     */
-    protected function mapSettings(array $record, array $update, $from = '', $to = '')
+    protected function mapSettings(array $record, array $update, string $from = '', string $to = ''): array
     {
         $fromPrefix = ($from ? $from . '_' : '');
         $toPrefix = ($to ? $to . '_' : '');
 
         $settings = 0;
-        // Previous setting: "Allow notification settings during stage change"
-        if ($record[$fromPrefix . 'allow_notificaton_settings']) {
+        if (!empty($record[$fromPrefix . 'allow_notificaton_settings'])) {
             ++$settings;
         }
-        // Previous setting: "All are selected per default (can be changed)"
-        if ((int)$record[$fromPrefix . 'notification_mode'] === 0) {
+        if ((int)($record[$fromPrefix . 'notification_mode'] ?? 0) === 0) {
             $settings += 2;
         }
 
-        // Custom stages: preselect responsible persons (8)
         if (isset($record['responsible_persons'])) {
             $preselection = 8;
-        // Workspace "edit" stage: preselect members (2)
         } elseif ($to === 'edit') {
             $preselection = 2;
-        // Workspace "publish" stage: preselect owners (1)
         } elseif ($to === 'publish') {
             $preselection = 1;
-        // Workspace "execute" stage: preselect owners (1) and members (2) as default
         } else {
             $preselection = 1 + 2;
         }
@@ -207,5 +160,18 @@ class WorkspacesNotificationSettingsUpdate implements UpgradeWizardInterface
     protected function getConnectionPool(): ConnectionPool
     {
         return GeneralUtility::makeInstance(ConnectionPool::class);
+    }
+
+    private function hasLegacyColumn(string $table, string $column): bool
+    {
+        try {
+            $schemaManager = $this->getConnectionPool()
+                ->getConnectionForTable($table)
+                ->createSchemaManager();
+            $columns = $schemaManager->listTableColumns($table);
+            return isset($columns[strtolower($column)]);
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }
