@@ -34,7 +34,8 @@
             "TYPO3\\CMS\\v95\\Core\\Upgrades\\": "Classes/Upgrades/v95/",
             "TYPO3\\CMS\\v104\\Core\\Upgrades\\": "Classes/Upgrades/v104/",
             "TYPO3\\CMS\\v11\\Core\\Upgrades\\": "Classes/Upgrades/v11/",
-            "TYPO3\\CMS\\v12\\Core\\Upgrades\\": "Classes/Upgrades/v12/"
+            "TYPO3\\CMS\\v12\\Core\\Upgrades\\": "Classes/Upgrades/v12/",
+            "TYPO3\\CMS\\v13\\Core\\Upgrades\\": "Classes/Upgrades/v13/"
         }
     },
     "extra": {

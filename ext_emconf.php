@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /***************************************************************
  * Extension Manager/Repository config file for ext "core_upgrader2".
  *
@@ -9,7 +11,6 @@
  * Only the data in the array - everything else is removed by next
  * writing. "version" and "dependencies" must not be touched!
  ***************************************************************/
-
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Core upgrader',
     'description' => 'Run upgrade wizards for multiple TYPO3 versions at once and clean up the system',
@@ -21,8 +22,7 @@ $EM_CONF[$_EXTKEY] = [
     'version' => '13.0.1',
     'constraints' => [
         'depends' => [
-            'typo3' => '14.0.0-14.4.99',
+            'typo3' => '14.0.0-14.3.99',
         ],
     ],
 ];
-
