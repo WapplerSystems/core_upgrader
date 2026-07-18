@@ -29,3 +29,6 @@ services:
 
   TYPO3\CMS\v12\Core\Upgrades\:
     resource: '../Classes/Upgrades/v12/*'
+
+  TYPO3\CMS\v13\Core\Upgrades\:
+    resource: '../Classes/Upgrades/v13/*'
